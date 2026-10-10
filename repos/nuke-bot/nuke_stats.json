@@ -1,0 +1,448 @@
+{
+  "users": {
+    "1427299411049840640": {
+      "uses": 20
+    },
+    "1450613343273615513": {
+      "uses": 4
+    },
+    "1055574652413550632": {
+      "uses": 2
+    },
+    "1105561097752301608": {
+      "uses": 1
+    },
+    "1202811656229494805": {
+      "uses": 3
+    },
+    "1422639622093148231": {
+      "uses": 8
+    },
+    "1315754480310157336": {
+      "uses": 1
+    },
+    "1342488164216082506": {
+      "uses": 1
+    },
+    "963552072375078943": {
+      "uses": 3
+    },
+    "1462382010961101048": {
+      "uses": 20
+    },
+    "979006906901356575": {
+      "uses": 2
+    },
+    "947509217449893964": {
+      "uses": 6
+    },
+    "1409615042378469467": {
+      "uses": 3
+    },
+    "1514324250683641887": {
+      "uses": 1
+    },
+    "1039286244988960879": {
+      "uses": 1
+    },
+    "1502721859064434809": {
+      "uses": 3
+    },
+    "1517524311793991752": {
+      "uses": 3
+    },
+    "1350576056393797743": {
+      "uses": 10
+    },
+    "1308502715403468850": {
+      "uses": 12
+    },
+    "1493717440205426882": {
+      "uses": 2
+    },
+    "1419957673440579686": {
+      "uses": 2
+    },
+    "1408137153547993219": {
+      "uses": 1
+    },
+    "1503823375082983524": {
+      "uses": 1
+    },
+    "1378524510134996992": {
+      "uses": 1
+    }
+  },
+  "servers": {
+    "1507495824786198538": {
+      "user_id": "1427299411049840640",
+      "member_count": 3,
+      "server_name": "Nuked by Cyber"
+    },
+    "1494057795308359720": {
+      "user_id": "1427299411049840640",
+      "member_count": 7,
+      "server_name": "wjdehwuhdw"
+    },
+    "1454683779829465237": {
+      "user_id": "1450613343273615513",
+      "member_count": 6,
+      "server_name": "Xeta Department of Interior"
+    },
+    "1509638125436276917": {
+      "user_id": "1450613343273615513",
+      "member_count": 2,
+      "server_name": "EZ DONUT"
+    },
+    "1454344757424947326": {
+      "user_id": "1450613343273615513",
+      "member_count": 4,
+      "server_name": "Xeta Olympic Games Council"
+    },
+    "1441914496586219652": {
+      "user_id": "1055574652413550632",
+      "member_count": 10,
+      "server_name": "Brainrot hub"
+    },
+    "1509909887486791892": {
+      "user_id": "1055574652413550632",
+      "member_count": 4,
+      "server_name": "Night"
+    },
+    "1452201991035158558": {
+      "user_id": "1450613343273615513",
+      "member_count": 3,
+      "server_name": "Therealcoolguy's Server"
+    },
+    "1510254117140959242": {
+      "user_id": "1105561097752301608",
+      "member_count": 4,
+      "server_name": "! AAA\u1d0f\u0274\u029f\u028f\u1d0d\u1d0f\u1d00\u026a's server"
+    },
+    "1510257409178992790": {
+      "user_id": "1427299411049840640",
+      "member_count": 3,
+      "server_name": "\ud835\udd83\ud835\udd8a\ud835\udd93\ud835\udd94\ud835\udd98\ud835\udd99\ud835\udd94\ud835\udd95\ud835\udd8e\ud835\udd88's server"
+    },
+    "1491438552888643615": {
+      "user_id": "1427299411049840640",
+      "member_count": 9,
+      "server_name": "Varin SMP"
+    },
+    "1510373725336240289": {
+      "user_id": "1422639622093148231",
+      "member_count": 3,
+      "server_name": "\ud835\udd83\ud835\udd8a\ud835\udd93\ud835\udd94\ud835\udd98\ud835\udd99\ud835\udd94\ud835\udd95\ud835\udd8e\ud835\udd88's server"
+    },
+    "1510593924056481892": {
+      "user_id": "1427299411049840640",
+      "member_count": 2,
+      "server_name": "\ud835\udd83\ud835\udd8a\ud835\udd93\ud835\udd94\ud835\udd98\ud835\udd99\ud835\udd94\ud835\udd95\ud835\udd8e\ud835\udd88's server"
+    },
+    "1505278040781881356": {
+      "user_id": "1427299411049840640",
+      "member_count": 6,
+      "server_name": "CoolboPlays | Official Server"
+    },
+    "1467518657314947306": {
+      "user_id": "1315754480310157336",
+      "member_count": 7,
+      "server_name": "Hexagon SMP"
+    },
+    "1511268583530041395": {
+      "user_id": "1427299411049840640",
+      "member_count": 2,
+      "server_name": "\ud835\udd83\ud835\udd8a\ud835\udd93\ud835\udd94\ud835\udd98\ud835\udd99\ud835\udd94\ud835\udd95\ud835\udd8e\ud835\udd88's server"
+    },
+    "1511750612289851392": {
+      "user_id": "1342488164216082506",
+      "member_count": 3,
+      "server_name": "\u30c3Kumui's Chilling Realm"
+    },
+    "1511921543532511342": {
+      "user_id": "963552072375078943",
+      "member_count": 2,
+      "server_name": "Orion's server"
+    },
+    "1511923947858432072": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Nuke test\ud83d\udc94\ud83d\ude2d"
+    },
+    "1511925555564380221": {
+      "user_id": "1462382010961101048",
+      "member_count": 2,
+      "server_name": "Nuke test"
+    },
+    "1511925854811459634": {
+      "user_id": "1462382010961101048",
+      "member_count": 2,
+      "server_name": "Nuke test"
+    },
+    "1511925348395253790": {
+      "user_id": "963552072375078943",
+      "member_count": 3,
+      "server_name": "Orion's server"
+    },
+    "1488972491798876260": {
+      "user_id": "1462382010961101048",
+      "member_count": 10,
+      "server_name": "DD"
+    },
+    "1488885691520913540": {
+      "user_id": "1462382010961101048",
+      "member_count": 9,
+      "server_name": "Dan"
+    },
+    "1512113354737451259": {
+      "user_id": "1462382010961101048",
+      "member_count": 2,
+      "server_name": "Nuke test"
+    },
+    "1512125356616712294": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Nuke test\ud83d\udc94"
+    },
+    "1448095147794366597": {
+      "user_id": "1422639622093148231",
+      "member_count": 82,
+      "server_name": "THE CHAOS FAMILY SERVER"
+    },
+    "1512186588770336809": {
+      "user_id": "963552072375078943",
+      "member_count": 3,
+      "server_name": "Orion's server"
+    },
+    "1513157072135524522": {
+      "user_id": "979006906901356575",
+      "member_count": 2,
+      "server_name": "El servidor de guzmanprox12"
+    },
+    "1456132817779167425": {
+      "user_id": "1422639622093148231",
+      "member_count": 22,
+      "server_name": "Amethyst SMP"
+    },
+    "1419317614467088496": {
+      "user_id": "1422639622093148231",
+      "member_count": 13,
+      "server_name": "VortexMC"
+    },
+    "1445209341383671903": {
+      "user_id": "947509217449893964",
+      "member_count": 10,
+      "server_name": "CivilizationSMP"
+    },
+    "1514731325318365194": {
+      "user_id": "947509217449893964",
+      "member_count": 2,
+      "server_name": "\ud835\udcbe\ud835\udcc3\ud835\udcbb\ud835\udcbe\ud835\udcc3\ud835\udcbe\ud835\udcc9\ud835\udcce's server"
+    },
+    "1442089625320427564": {
+      "user_id": "1409615042378469467",
+      "member_count": 17,
+      "server_name": "OWO GAMING"
+    },
+    "1492495667547869266": {
+      "user_id": "1427299411049840640",
+      "member_count": 47,
+      "server_name": "AKATSUKI"
+    },
+    "1464630119153799210": {
+      "user_id": "947509217449893964",
+      "member_count": 21,
+      "server_name": "CRYSTAL SMP"
+    },
+    "1514747391561957436": {
+      "user_id": "1514324250683641887",
+      "member_count": 2,
+      "server_name": "Niggers"
+    },
+    "1248633990177357986": {
+      "user_id": "1039286244988960879",
+      "member_count": 20,
+      "server_name": "\u1d04\u1d0f\u0274\ua731\u1d1b\u1d07\u029f\u029f\u1d00\u1d1b\u026a\u1d0f\u0274 \u1d00"
+    },
+    "1416101458805264527": {
+      "user_id": "1502721859064434809",
+      "member_count": 124,
+      "server_name": "\u1d0d\u1d0f\u0274\u1d0b\u1d07\u028f\u1d20\u1d07\u0280s\u1d07"
+    },
+    "1515008042637328434": {
+      "user_id": "1202811656229494805",
+      "member_count": 2,
+      "server_name": "AeR's server"
+    },
+    "1517260837385928753": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Dadscords"
+    },
+    "1517658720236998826": {
+      "user_id": "1517524311793991752",
+      "member_count": 2,
+      "server_name": "Test Server"
+    },
+    "1517922298043175136": {
+      "user_id": "1517524311793991752",
+      "member_count": 4,
+      "server_name": "niggers"
+    },
+    "1503727143622934538": {
+      "user_id": "1350576056393797743",
+      "member_count": 6,
+      "server_name": "\u300c\ud83d\udc8d\u300d\u1c14\u1a5a\u22b9\ud835\udcd7\ud835\udcea\ud835\udcff\ud835\udcee\ud835\udcf7'\ud835\udcfc \ud835\udcd6\ud835\udcea\ud835\udcfb\ud835\udced\ud835\udcee\ud835\udcf7\u22b9\u1c14\u1a5a\u300c\ud83d\udc8d\u300d"
+    },
+    "1514697500395569182": {
+      "user_id": "1350576056393797743",
+      "member_count": 15,
+      "server_name": "Sir John Thursby | Community and Chat"
+    },
+    "1516511125271871578": {
+      "user_id": "1308502715403468850",
+      "member_count": 4,
+      "server_name": "\ua9c5\ud808\ude19\ud809\udc2b\ufdfd\ua9c5\ud809\udc2b\ud808\ude19\u2e3b\ud809\udc2b\ufdfd\u102a\u102a\ud808\ude19\ud809\udc2b\ua9c5\u102a\ud808\ude19\ufdfd\ufdfd\ufdfd\ud809\udc2b\ua9c5\u102a \ua9c5\ud808\ude19\ud809\udc2b\ufdfd\ua9c5\ud809\udc2b\ud808\ude19\u2e3b\ud809\udc2b\ufdfd\u102a\u102a\ud808\ude19\ud809\udc2b\ua9c5\u102a\ud808\ude19\ufdfd\ufdfd\ufdfd\ud809\udc2b\ua9c5\u102a \ua9c5\ud808\ude19\ud809\udc2b\ufdfd\ua9c5\ud809\udc2b\ud808\ude19\u2e3b\ud809\udc2b\ufdfd\u102a\u102a\ud808\ude19\ud809\udc2b\ua9c5\u102a\ud808\ude19\ufdfd\ufdfd\ufdfd\ud809\udc2b\ua9c5"
+    },
+    "1518367535026933830": {
+      "user_id": "1517524311793991752",
+      "member_count": 3,
+      "server_name": "\ud835\udd83\ud835\udd8a\ud835\udd93\ud835\udd94\ud835\udd98\ud835\udd99\ud835\udd94\ud835\udd95\ud835\udd8e\ud835\udd88's server"
+    },
+    "1513194262236237844": {
+      "user_id": "1462382010961101048",
+      "member_count": 40,
+      "server_name": "\ud83e\ude78|\ud835\udcd7\ud835\udce3\ud835\udcd3|\ud835\udcd7\ud835\udcea\ud835\udd00\ud835\udcf4\ud835\udce3\ud835\udcf1\ud835\udcee\ud835\udcf6\ud835\udcd3\ud835\udcf8\ud835\udd00\ud835\udcf7|\ud835\udcd7\ud835\udce3\ud835\udcd3|\ud83e\ude78 \u30fb\ud835\udcd5\ud835\udcfb\ud835\udcee\ud835\udcee \ud835\udcd0\ud835\udcec\ud835\udcec\ud835\udcee\ud835\udcfc\ud835\udcfc \u30fb\ud83e\ude78"
+    },
+    "1518764500902481930": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Dusky's Togachako server"
+    },
+    "1518859111641387050": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Nuke fucking test"
+    },
+    "1518861435323814029": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Raid and nuke test."
+    },
+    "1499804528986427392": {
+      "user_id": "1462382010961101048",
+      "member_count": 111,
+      "server_name": "\u263e\u22c6\u207a\u208a\u22c6\u2102\ud835\udd5a\ud835\udd65\ud835\udd52\ud835\udd55\ud835\udd56\ud835\udd5d \ud835\udd60\ud835\udd57 \u211d\ud835\udd5a\ud835\udd54\ud835\udd5c\ud835\udd64 \ud835\udd52\ud835\udd5f\ud835\udd55 \ud835\udd44\ud835\udd60\ud835\udd63\ud835\udd65\ud835\udd6a\ud835\udd64\u22c6\u207a\u208a\u22c6\u263d"
+    },
+    "1519628935539855390": {
+      "user_id": "1493717440205426882",
+      "member_count": 2,
+      "server_name": "\ua9c1\u2727\u2005GBS \ud835\ude11\u2005\ud835\ude22\u2005\ud835\ude3a\u2005\u0fd0's server"
+    },
+    "1521195659577917490": {
+      "user_id": "1462382010961101048",
+      "member_count": 3,
+      "server_name": "Cereal nuke bot test"
+    },
+    "1521196902798856192": {
+      "user_id": "1462382010961101048",
+      "member_count": 2,
+      "server_name": "Nuke test #509000092828"
+    },
+    "1521197441460998305": {
+      "user_id": "1462382010961101048",
+      "member_count": 2,
+      "server_name": "Nuker 6299373527283"
+    },
+    "1521220767956603033": {
+      "user_id": "1493717440205426882",
+      "member_count": 2,
+      "server_name": "\ua9c1\u2727\u2005GBS \ud835\ude11\u2005\ud835\ude22\u2005\ud835\ude3a\u2005\u0fd0's server"
+    },
+    "1438436614673006634": {
+      "user_id": "1419957673440579686",
+      "member_count": 11,
+      "server_name": "Hamburger group\ud83c\udf54"
+    },
+    "1524501411805790279": {
+      "user_id": "1308502715403468850",
+      "member_count": 3,
+      "server_name": "\ud835\udd83\ud835\udd8a\ud835\udd93\ud835\udd94\ud835\udd98\ud835\udd99\ud835\udd94\ud835\udd95\ud835\udd8e\ud835\udd88's server"
+    },
+    "1521227858188697690": {
+      "user_id": "1408137153547993219",
+      "member_count": 7,
+      "server_name": "nuked by ratbiy"
+    },
+    "1524511251978256658": {
+      "user_id": "1350576056393797743",
+      "member_count": 21,
+      "server_name": "The C.I.A. Of America \ud83c\uddfa\ud83c\uddf8 and the government of England \ud83c\udff4"
+    },
+    "1495859883562762270": {
+      "user_id": "1308502715403468850",
+      "member_count": 33,
+      "server_name": "I gaf"
+    },
+    "1517475066995019958": {
+      "user_id": "1350576056393797743",
+      "member_count": 13,
+      "server_name": "Blackfox's fox community"
+    },
+    "1474385821690761299": {
+      "user_id": "1308502715403468850",
+      "member_count": 4,
+      "server_name": "Youtubers discord"
+    },
+    "1505296317008838777": {
+      "user_id": "1308502715403468850",
+      "member_count": 3,
+      "server_name": "CoolboPlays | IDK"
+    },
+    "1446536240173420746": {
+      "user_id": "1350576056393797743",
+      "member_count": 6,
+      "server_name": "Asteria \u2726 || Hangout \u2022 Gaming"
+    },
+    "1525493838616072294": {
+      "user_id": "1308502715403468850",
+      "member_count": 12,
+      "server_name": "Dashrot (server got nuked)"
+    },
+    "1525814407752323143": {
+      "user_id": "1503823375082983524",
+      "member_count": 13,
+      "server_name": "Cat's server : D"
+    },
+    "1537528452796907541": {
+      "user_id": "1308502715403468850",
+      "member_count": 16,
+      "server_name": "Delta reaven"
+    },
+    "1523044646811471982": {
+      "user_id": "1308502715403468850",
+      "member_count": 31,
+      "server_name": "\ud835\udd38\ud835\udd4f\ud835\udd3c"
+    },
+    "1475011808380190832": {
+      "user_id": "1419957673440579686",
+      "member_count": 32,
+      "server_name": "Catnapions!"
+    },
+    "1529860329163591750": {
+      "user_id": "1308502715403468850",
+      "member_count": 30,
+      "server_name": "Sky Links"
+    },
+    "1532670573954727986": {
+      "user_id": "1502721859064434809",
+      "member_count": 21,
+      "server_name": "Nigger"
+    },
+    "1497436624936767608": {
+      "user_id": "1378524510134996992",
+      "member_count": 36,
+      "server_name": "fg cord"
+    }
+  }
+}
