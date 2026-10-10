@@ -1,0 +1,7 @@
+name = "xenostopic-repo-stats"
+main = "repo-stats-worker.js"
+compatibility_date = "2025-01-01"
+
+kv_namespaces = [
+  { binding = "REPO_STATS_KV", id = "e9f3d4eb3ea74e40a8afe49f35bf60f7" }
+]

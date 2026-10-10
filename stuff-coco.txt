@@ -1,0 +1,17 @@
+# Coco repositories
+# Order here = order shown on Coco's profile.
+
+[repo]
+dir = Sab-script
+
+[repo]
+dir = Bf-script
+
+[repo]
+dir = KE-Script
+
+[repo]
+dir = Sae-script
+
+# Git bundles and ZIPs are generated on demand in browser memory. They are
+# never written into this site or committed as static artifacts.

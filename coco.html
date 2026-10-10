@@ -1,0 +1,2326 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coco | Site</title>
+    <link rel="icon" href="assets/profile2.png" type="image/webp">
+
+    <!-- ── Discord / Open Graph embed ─────────────────────────────────── -->
+    <meta property="og:title" content="Enter Coco's Bio Site">
+    <meta property="og:description" content="Much better than anything you can make with guns.lol.">
+    <meta property="og:image" content="https://gg.overgrown.site.je/assets/profile2.png">
+    <meta property="og:url" content="https://gg.overgrown.site.je/coco.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Coco">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Enter Coco's Bio Site">
+    <meta name="twitter:description" content="Much better than anything you can make with guns.lol.">
+    <meta name="twitter:image" content="https://gg.overgrown.site.je/assets/profile2.png">
+
+    <meta name="theme-color" content="#00CED1">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ── Custom cursor ──────────────────────────────────────────────── */
+        .custom-cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: url('assets/custom_cursor.png') no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            display: none; /* hidden until first mousemove */
+        }
+
+        body:not(.touch-device) { cursor: none; }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        #background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .glitch-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #hacker-overlay, #snow-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ── Theme buttons ──────────────────────────────────────────────── */
+        .controls {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(0,0,0,0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            align-items: center;
+        }
+
+        .theme-button {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background-color: rgba(0,0,0,0.5);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+            font-size: 14px; font-weight: bold;
+        }
+        .theme-button:hover { transform: scale(1.1); border-color: rgba(255,255,255,0.8); }
+
+        /* ── Volume ─────────────────────────────────────────────────────── */
+        .volume-control {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .volume-icon {
+            width: 20px; height: 20px;
+            cursor: pointer; display: flex; color: white;
+        }
+
+        /* ── Transparency ───────────────────────────────────────────────── */
+        .transparency-control {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .transparency-icon {
+            width: 20px; height: 20px; color: white;
+        }
+
+        /* ── Shared slider ──────────────────────────────────────────────── */
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px; height: 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.3);
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* ── Side nav buttons (forward + backward cycling) ────────────────── */
+        #side-nav-group {
+            position: fixed;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 21;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;                       /* hidden until start screen dismissed */
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        #side-nav-group.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #side-nav-btn,
+        #side-nav-btn-back {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 48px;
+            padding: 12px 0;
+            border-radius: 24px;
+            background: rgba(0,0,0,0.65);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            letter-spacing: 0.5px;
+        }
+        #side-nav-btn:hover,
+        #side-nav-btn-back:hover {
+            background: rgba(0,0,0,0.85);
+            border-color: var(--primary-color, #00CED1);
+            box-shadow: 0 0 12px rgba(0,206,209,0.35);
+            transform: scale(1.06);
+        }
+        #side-nav-arrow,
+        #side-nav-arrow-back {
+            font-size: 16px;
+            color: var(--primary-color, #00CED1);
+            line-height: 1;
+            display: block;
+        }
+        #side-nav-label,
+        #side-nav-label-back {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        /* ── Trail style button ─────────────────────────────────────────── */
+        .trail-button {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.4);
+            color: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .trail-button:hover {
+            border-color: rgba(255,255,255,0.7);
+            transform: scale(1.15);
+        }
+
+        /* ── Top controls bar ───────────────────────────────────────────── */
+        .top-controls {
+            position: fixed;
+            bottom: 72px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 20;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            transition: top 0.4s ease, bottom 0.4s ease, left 0.4s ease, transform 0.4s ease;
+        }
+
+        /* On the Image Host tab, the controls move to the top-left so they
+           don't sit over the upload UI. */
+        .top-controls.top-controls--top-left {
+            top: 20px;
+            bottom: auto;
+            left: 20px;
+            transform: none;
+        }
+        @media (max-width: 430px) {
+            .top-controls.top-controls--top-left { top: 14px; left: 14px; }
+        }
+
+        /* ── Profile block ──────────────────────────────────────────────── */
+        #profile-block {
+            position: fixed;
+            top: 50%; left: 50%;
+            /* GSAP drives xPercent/yPercent — don't set transform here */
+            width: 820px;
+            min-height: 332px;
+            background: rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(1.5px);
+            opacity: 0;                    /* GSAP animates to 1 */
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease-out;
+            pointer-events: auto;
+        }
+
+        .profile-header {
+            display: flex; align-items: flex-start; gap: 15px;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 150px; height: 150px;
+        }
+
+        .profile-container::after {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 10px 10px,
+                var(--primary-color, #00CED1) 10%,
+                transparent 15%
+            );
+            animation: orbit 3s linear infinite;
+            z-index: -1;
+            filter: blur(1px);
+        }
+
+        .profile-container.fast-orbit::after {
+            animation: fast-orbit 0.5s linear forwards;
+        }
+
+        .profile-picture {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex; flex-direction: column;
+        }
+
+        .name-and-badges {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* ── Custom font ────────────────────────────────────────────────── */
+        @font-face {
+            font-family: 'Angel Wish';
+            src: url('assets/Angel_wish.ttf') format('truetype');
+            font-weight: normal; font-style: normal;
+        }
+
+        /* ── Name flicker animation ─────────────────────────────────────── */
+        @keyframes name-fuzzy {
+            0%,78%,100% {
+                filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)) blur(0px);
+                letter-spacing: 3px;
+            }
+            82% {
+                filter: drop-shadow(0 0 18px rgba(255,255,255,1)) blur(2.5px);
+                letter-spacing: 4.5px;
+            }
+            86% {
+                filter: drop-shadow(0 0 4px rgba(255,255,255,0.35)) blur(0.8px);
+                letter-spacing: 2px;
+            }
+            91% {
+                filter: drop-shadow(0 0 22px rgba(255,255,255,0.95)) blur(3px);
+                letter-spacing: 5px;
+            }
+            95% {
+                filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)) blur(0.4px);
+                letter-spacing: 3px;
+            }
+        }
+
+        #profile-name {
+            font-family: 'Angel Wish', sans-serif;
+            font-size: 32px; font-weight: bold;
+            letter-spacing: 3px;
+            color: #fff;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+            opacity: 1 !important;
+            animation: name-fuzzy 7s ease-in-out infinite;
+        }
+
+        /* ── Badges ─────────────────────────────────────────────────────── */
+        .badge-group {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .badge-container {
+            position: relative;
+            pointer-events: auto;
+            opacity: 1 !important;
+        }
+        .badge-container .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgba(0,0,0,0.8);
+            color: #fff; text-align: center;
+            border-radius: 6px; padding: 5px 0;
+            position: absolute; z-index: 100;
+            bottom: 125%; left: 50%; margin-left: -60px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .badge-container:hover .tooltip { visibility: visible; opacity: 1 !important; }
+        .badge-box {
+            background: rgba(255,255,255,0.15);
+            padding: 2px; border-radius: 15px; display: inline-block;
+        }
+        .badge-box-inner {
+            background: rgba(0,0,0,0.5); padding: 5px; border-radius: 12px;
+            display: flex; gap: 8px;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
+        }
+        .badge {
+            width: 22px; height: 22px;
+            transition: transform 0.3s;
+            pointer-events: auto; opacity: 1 !important;
+        }
+        .badge:hover { transform: scale(1.2); }
+
+        /* ── Bio ────────────────────────────────────────────────────────── */
+        #profile-bio {
+            color: rgba(255,255,255,0.8);
+            font-size: 18px; line-height: 1.5;
+            margin-bottom: 6px;
+            opacity: 1 !important;
+        }
+
+        /* ── Bio extras (tag chips) ──────────────────────────────────────── */
+        #bio-extras {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            opacity: 1 !important;
+            pointer-events: auto;
+        }
+
+        .bio-tag {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 3px 11px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.72);
+            cursor: default;
+            transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+            user-select: none;
+        }
+        .bio-tag:hover {
+            background: rgba(255,255,255,0.14);
+            border-color: var(--primary-color, #00CED1);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ── Separator ──────────────────────────────────────────────────── */
+        .bio-separator {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+            margin: 16px 0;
+            opacity: 1 !important;
+        }
+
+        /* ── Profile footer ─────────────────────────────────────────────── */
+        .profile-footer {
+            display: flex; flex-direction: column; gap: 5px;
+            width: 100%; margin-top: auto;
+        }
+
+        /* ── Visitor counter ────────────────────────────────────────────── */
+        .visitor-counter {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px; border-radius: 20px;
+            font-size: 14px; align-self: flex-start;
+            position: relative; pointer-events: auto;
+            opacity: 1 !important;
+        }
+        .visitor-icon {
+            width: 18px; height: 18px;
+            color: white; opacity: 1 !important;
+        }
+        .visitor-counter .tooltip {
+            visibility: hidden;
+            width: 120px; background-color: rgba(0,0,0,0.8);
+            color: #fff; text-align: center;
+            border-radius: 6px; padding: 5px 0;
+            position: absolute; z-index: 100;
+            top: -35px; left: 50%; margin-left: -60px;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .visitor-counter:hover .tooltip { visibility: visible; opacity: 1 !important; }
+        #visitor-count { opacity: 1 !important; }
+
+        /* ── Social links ───────────────────────────────────────────────── */
+        .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 0;
+    pointer-events: auto;
+    opacity: 1 !important;
+}
+
+/* ↑ Bumped from 36px → 48px */
+.social-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+    pointer-events: auto;
+    opacity: 1 !important;
+}
+
+/* upscale snapchat gif only */
+a[href*="snapchat"] .social-icon {
+    width: 58px;
+    height: 58px;
+    margin-top: -5px;
+}
+
+.social-icon:hover {
+    transform: scale(1.35) rotateY(15deg);
+}
+
+/* ── Troll trigger icon (next to name) ──────────────────────────────── */
+#troll-trigger {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    cursor: pointer;
+    pointer-events: auto;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+    transition: transform 0.3s ease;
+}
+#troll-trigger:hover {
+    transform: scale(1.2) rotate(-8deg);
+}
+
+/* ── Rickroll DVD-bounce window ─────────────────────────────────────── */
+#rickroll-window {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 420px;
+    z-index: 99999;
+    background: #000;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.4);
+    overflow: hidden;
+    display: none;
+    perspective: 1000px;
+}
+#rickroll-window.active { display: block; }
+#rickroll-tilt {
+    /* Cursor-tilt rotation lives here, separate from the bounce translate
+       on #rickroll-window, so the two transforms don't overwrite each other. */
+    transform-style: preserve-3d;
+}
+#rickroll-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    padding: 5px 8px;
+    letter-spacing: 1px;
+    user-select: none;
+}
+#rickroll-close {
+    cursor: pointer;
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 0 8px;
+    line-height: 1.6;
+}
+#rickroll-close:hover {
+    background: rgba(255,60,60,0.8);
+}
+#rickroll-window video {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* ── Social link popup windows ──────────────────────────────────────── */
+.social-popup {
+    position: fixed;
+    width: 460px;
+    max-width: 92vw;
+    height: 560px;
+    max-height: 82vh;
+    background: rgba(10,10,14,0.97);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.65), 0 0 40px rgba(0,206,209,0.1);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.social-popup-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px 11px 14px;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    flex-shrink: 0;
+    cursor: grab;
+    user-select: none;
+}
+.social-popup-titlebar:active { cursor: grabbing; }
+.social-popup-title {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+}
+.social-popup-close {
+    flex-shrink: 0;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    transition: all 0.15s ease;
+}
+.social-popup-close:hover { background: rgba(255,60,60,0.8); color: #fff; }
+.social-popup-body {
+    flex: 1;
+    position: relative;
+    background: #08080a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: center;
+    padding: 32px;
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+}
+.social-popup-body img {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+}
+.social-popup-link-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 340px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+.social-popup-link-text {
+    flex: 1;
+    color: rgba(255,255,255,0.75);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+.social-popup-copy-btn {
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 12px;
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    transition: all 0.15s ease;
+}
+.social-popup-copy-btn:hover { background: rgba(255,255,255,0.16); }
+.social-popup-copy-btn.copied {
+    background: var(--primary-color, #00CED1);
+    color: #06131a;
+    border-color: var(--primary-color, #00CED1);
+}
+.social-popup-open-btn {
+    display: inline-block;
+    padding: 9px 22px;
+    border-radius: 8px;
+    background: var(--primary-color, #00CED1);
+    color: #06131a;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+.social-popup-open-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+@media (max-width: 560px) {
+    .social-popup { width: 94vw; height: 78vh; }
+}
+
+        /* ── Discord Presence ───────────────────────────────────────────── */
+        #discord-presence {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 6px;
+        }
+        .presence-dot {
+            width: 11px; height: 11px;
+            border-radius: 50%; flex-shrink: 0;
+            box-shadow: 0 0 6px currentColor;
+        }
+        .presence-dot.online  { background: #23a55a; color: #23a55a; }
+        .presence-dot.idle    { background: #f0b232; color: #f0b232; }
+        .presence-dot.dnd     { background: #f23f43; color: #f23f43; }
+        .presence-dot.offline { background: #80848e; color: #80848e; box-shadow: none; }
+        #presence-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.75);
+            font-style: italic;
+        }
+
+        /* ── Theme-specific border colours ──────────────────────────────── */
+        .home-theme  #profile-block,
+        .home-theme  #skills-block  { border-color: rgba(0,195,255,0.5); }
+        .anime-theme #profile-block,
+        .anime-theme #skills-block  { border-color: rgba(255,0,255,0.5); }
+
+        /* ── Glitch animation ───────────────────────────────────────────── */
+        .glitch { animation: glitchShake 0.2s ease-in-out; }
+        @keyframes glitchShake {
+            0%   { transform: translate(0); }
+            20%  { transform: translate(-2px, 2px); }
+            40%  { transform: translate(-2px,-2px); }
+            60%  { transform: translate( 2px, 2px); }
+            80%  { transform: translate( 2px,-2px); }
+            100% { transform: translate(0); }
+        }
+
+        /* ── Orbit animations ───────────────────────────────────────────── */
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes fast-orbit {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ── Cursor trail dots ──────────────────────────────────────────── */
+        .cursor-trail {
+            position: fixed; pointer-events: none; z-index: 9999;
+        }
+        .cursor-trail-dot {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(
+                circle,
+                var(--primary-color, #00CED1) 0%,
+                var(--secondary-color, #FF6B9E) 100%
+            );
+            box-shadow: 0 0 4px var(--primary-color, #00CED1);
+        }
+        /* Comet variant — slightly elongated glow */
+        .cursor-trail-comet {
+            box-shadow: 0 0 8px 2px var(--primary-color, #00CED1);
+        }
+        /* Sparkle variant */
+        .cursor-trail-sparkle {
+            position: absolute;
+            pointer-events: none;
+            font-size: 13px;
+            color: var(--primary-color, #00CED1);
+            text-shadow: 0 0 6px var(--primary-color, #00CED1),
+                         0 0 12px var(--secondary-color, #FF6B9E);
+        }
+
+        /* ── Start screen ───────────────────────────────────────────────── */
+        #start-screen {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: #000;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 30;
+            overflow: hidden;
+        }
+        #starfield {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            display: block;
+        }
+        #start-screen::before {
+            /* subtle vignette so the terminal reads clearly over the stars */
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
+            pointer-events: none;
+        }
+
+        /* ── Floating terminal window ───────────────────────────────────── */
+        #terminal-window {
+            position: relative;
+            z-index: 1;
+            width: 640px;
+            max-width: 92vw;
+            height: 420px;
+            max-height: 78vh;
+            background: rgba(10,10,14,0.92);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 12px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.65), 0 0 40px rgba(0,206,209,0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            cursor: default;
+        }
+
+        .terminal-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 14px;
+            background: rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        .term-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .term-dot--red    { background: #ff5f57; }
+        .term-dot--yellow { background: #febc2e; }
+        .term-dot--green  { background: #28c840; }
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 0.5px;
+            margin-right: 44px; /* balance the 3 dots on the left */
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 18px 20px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: #7CFC9E;
+            white-space: pre-wrap;
+            cursor: default;
+        }
+        .terminal-body::-webkit-scrollbar { width: 6px; }
+        .terminal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+        #terminal-boot-lines .term-line { display: block; }
+        #terminal-boot-lines .term-ok   { color: #7CFC9E; }
+        #terminal-boot-lines .term-dim  { color: rgba(255,255,255,0.35); }
+        #terminal-boot-lines .term-warn { color: #febc2e; }
+
+        #terminal-ascii {
+            display: none;
+            color: #00CED1;
+            text-shadow: 0 0 8px rgba(0,206,209,0.5);
+            font-size: 11px;
+            line-height: 1.15;
+            margin: 4px 0 14px;
+            white-space: pre;
+        }
+        #terminal-quote {
+            display: none;
+            color: rgba(255,255,255,0.82);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        #terminal-continue {
+            display: none;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+        #terminal-continue:hover { color: var(--primary-color, #00CED1); }
+        .term-blink-cursor {
+            display: inline-block;
+            width: 8px;
+        }
+
+        /* ── Music Player (lives inside profile-block, tilts with it) ──── */
+        .music-player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+        .song-title {
+            font-size: 11px;
+            color: rgba(255,255,255,0.75);
+            letter-spacing: 0.5px;
+        }
+        /* ── Seek / progress bar row ────────────────────────────────────── */
+        .seek-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        #seek-bar {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            background: linear-gradient(
+                to right,
+                var(--primary-color, #00CED1) 0%,
+                var(--primary-color, #00CED1) var(--seek-pct, 0%),
+                rgba(255,255,255,0.18) var(--seek-pct, 0%),
+                rgba(255,255,255,0.18) 100%
+            );
+        }
+        #seek-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.4);
+            transition: transform 0.15s;
+        }
+        #seek-bar:hover::-webkit-slider-thumb { transform: scale(1.25); }
+        .time-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.42);
+            font-family: 'Courier New', monospace;
+            min-width: 30px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .player-btns {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .player-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            padding: 0;
+            user-select: none;
+            font-family: 'Courier New', monospace;
+            flex-shrink: 0;
+        }
+        .player-btn:hover {
+            background: rgba(255,255,255,0.22);
+            border-color: rgba(255,255,255,0.6);
+            transform: scale(1.12);
+        }
+        /* play/pause is slightly bigger */
+        #btn-play-pause { width: 34px; height: 34px; font-size: 14px; }
+
+        /* ── Mobile ─────────────────────────────────────────────────────── */
+        @media (max-width: 430px) {
+            #profile-block, #skills-block {
+                width: 90vw; max-width: 350px;
+                min-height: 280px; padding: 15px;
+                top: 50%; left: 50%;
+            }
+            .profile-header {
+                flex-direction: column; align-items: center; gap: 10px;
+            }
+            .profile-container { width: 120px; height: 120px; }
+            .profile-picture   { width: 120px; height: 120px; }
+            .profile-info      { align-items: center; text-align: center; }
+            .name-and-badges   { flex-direction: column; align-items: center; gap: 8px; }
+            #profile-name      { font-size: 24px; letter-spacing: 2px; }
+            .badge-group       { justify-content: center; gap: 6px; }
+            .badge             { width: 18px; height: 18px; }
+            .badge-container .tooltip { width: 100px; font-size: 12px; margin-left: -50px; bottom: 110%; }
+            #profile-bio       { font-size: 14px; line-height: 1.4; }
+            #bio-extras        { justify-content: center; }
+            .bio-separator     { margin: 15px 0; }
+            .social-links      { gap: 10px; justify-content: center; }
+            .social-icon       { width: 42px; height: 42px; }
+            .visitor-counter   { font-size: 12px; padding: 6px 12px; align-self: center; }
+            .visitor-icon      { width: 16px; height: 16px; }
+            .visitor-counter .tooltip { width: 100px; font-size: 12px; margin-left: -50px; top: -30px; }
+            .skills-title      { font-size: 18px; margin-bottom: 10px; }
+            .skill-icon        { width: 18px; height: 18px; }
+            .skill-name span   { font-size: 14px; }
+            .controls          { bottom: 14px; gap: 8px; padding: 5px 8px; }
+            .theme-button      { width: 28px; height: 28px; font-size: 12px; }
+            .top-controls      { bottom: 62px; gap: 10px; padding: 6px 10px; }
+            .volume-control, .transparency-control { gap: 6px; }
+            .volume-icon, .transparency-icon { width: 18px; height: 18px; }
+            .slider            { width: 60px; height: 4px; }
+            .slider::-webkit-slider-thumb { width: 10px; height: 10px; }
+            #results-button-container { top: 10px; }
+            #results-theme     { padding: 6px 12px; font-size: 12px; }
+            #results-hint      { width: 150px; font-size: 10px; padding: 6px 10px; }
+            #start-text        { font-size: 18px; padding: 0 20px; }
+            .song-title        { font-size: 10px; }
+            .player-btn        { width: 26px; height: 26px; font-size: 11px; }
+            #btn-play-pause    { width: 30px; height: 30px; font-size: 13px; }
+            .player-btns       { gap: 6px; }
+            .time-label        { font-size: 9px; min-width: 24px; }
+            /* git-block mobile */
+            #git-block      { width: 90vw; max-width: 350px; padding: 14px; }
+            .gh-title          { font-size: 26px; }
+            .gh-logo-box       { width: 78px; height: 78px; min-width: 78px; }
+            .gh-repos          { grid-template-columns: 1fr; }
+            .repo-icon-wrap    { width: 56px; height: 56px; min-width: 56px; }
+            #scroll-hint       { bottom: 132px; }
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           SELF-HOSTED GIT STATS BLOCK
+           ══════════════════════════════════════════════════════════════════ */
+        #git-block {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 820px;
+            max-width: 90vw;
+            background: rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 22px 22px 18px;
+            border-radius: 15px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            backdrop-filter: blur(1.5px);
+            opacity: 0;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+        .home-theme  #git-block { border-color: rgba(0,195,255,0.5); }
+        .anime-theme #git-block { border-color: rgba(255,0,0,0.5); }
+
+        /* header */
+        .gh-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .gh-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex: 1;
+        }
+        .gh-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+        .gh-title {
+            font-family: 'Courier New', monospace;
+            font-size: 42px;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1;
+            letter-spacing: 1px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.35));
+        }
+        .gh-url {
+            color: rgba(255,255,255,0.68);
+            font-size: 13px;
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+        }
+        .gh-url:hover { color: var(--primary-color, #00CED1); }
+        .gh-desc {
+            color: rgba(255,255,255,0.58);
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.55;
+        }
+        .gh-follow-stats {
+            color: rgba(255,255,255,0.75);
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            margin-top: 2px;
+        }
+        .gh-follow-stats span {
+            color: #fff;
+            font-weight: 600;
+        }
+        .gh-follow-link {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.15s ease, border-color 0.15s ease;
+        }
+        .gh-follow-link:hover {
+            color: var(--primary-color, #00CED1);
+            border-bottom-color: var(--primary-color, #00CED1);
+        }
+        .gh-follow-link:hover span { color: var(--primary-color, #00CED1); }
+
+        /* repo host logo box */
+        .gh-logo-box {
+            width: 130px;
+            height: 130px;
+            min-width: 130px;
+            border-radius: 18px;
+            background: rgba(10,10,10,0.75);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.55);
+            flex-shrink: 0;
+        }
+        .gh-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        /* separator */
+        .gh-separator {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.18);
+            margin: 2px 0;
+        }
+
+        /* 2×2 repo grid */
+        .gh-repos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .repo-card {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            border-radius: 11px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.22s, border-color 0.22s, transform 0.22s;
+        }
+        .repo-card:hover {
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        .repo-icon-wrap {
+            width: 76px;
+            height: 76px;
+            min-width: 76px;
+            border-radius: 11px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .repo-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+        }
+        .repo-icon-fallback {
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        .repo-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 0;
+        }
+        .repo-name {
+            font-weight: bold;
+            font-size: 15px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        .repo-url {
+            font-size: 11.5px;
+            color: rgba(255,255,255,0.45);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+        .repo-lines {
+            font-size: 11px;
+            color: var(--primary-color, #00CED1);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin-top: 1px;
+        }
+
+        /* scroll hint arrow */
+        #scroll-hint {
+            position: fixed;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 18;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: rgba(255,255,255,0.30);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .sh-arrow {
+            font-size: 18px;
+            animation: sh-bounce 1.6s ease-in-out infinite;
+        }
+        @keyframes sh-bounce {
+            0%, 100% { transform: translateY(0);   opacity: .30; }
+            50%       { transform: translateY(7px); opacity: .65; }
+        }
+
+        /* page indicator dots */
+        .page-sep {
+            width: 1px;
+            height: 18px;
+            background: rgba(255,255,255,0.2);
+            margin: 0 2px;
+            flex-shrink: 0;
+        }
+        .page-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.28);
+            cursor: pointer;
+            transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+            flex-shrink: 0;
+        }
+        .page-dot.active {
+            background: var(--primary-color, #00CED1);
+            transform: scale(1.35);
+            box-shadow: 0 0 6px var(--primary-color, #00CED1);
+        }
+        .page-dot:hover:not(.active) {
+            background: rgba(255,255,255,0.55);
+            transform: scale(1.15);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           CONTACT BLOCK
+           ══════════════════════════════════════════════════════════════════ */
+        #contact-block {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 820px;
+            max-width: 90vw;
+            background: rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 22px 22px 18px;
+            border-radius: 15px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            backdrop-filter: blur(1.5px);
+            opacity: 0;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+        .home-theme  #contact-block { border-color: rgba(0,195,255,0.5); }
+        .anime-theme #contact-block { border-color: rgba(255,0,255,0.5); }
+
+        /* ══════════════════════════════════════════════════════════════════
+           IMAGE HOST TAB
+           ══════════════════════════════════════════════════════════════════ */
+        #imagehost-block {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 620px;
+            max-width: 90vw;
+            height: 640px;
+            max-height: 82vh;
+            background: rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0;
+            border-radius: 15px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(1.5px);
+            opacity: 0;
+            pointer-events: none;
+            transform-style: preserve-3d;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.5);
+        }
+        .home-theme  #imagehost-block { border-color: rgba(0,195,255,0.5); }
+        .anime-theme #imagehost-block { border-color: rgba(255,0,110,0.5); }
+
+        .ih-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            flex-shrink: 0;
+        }
+        .ih-titlebar-dots { display: flex; gap: 7px; flex-shrink: 0; }
+        .ih-title {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .ih-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 26px 24px 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            color: #f2f3f5;
+        }
+        .ih-body::-webkit-scrollbar { width: 6px; }
+        .ih-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+        .ih-heading { text-align: center; }
+        .ih-heading h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .ih-heading p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .ih-dropzone {
+            width: 100%;
+            border: 2px dashed rgba(255,255,255,0.22);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            padding: 44px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .ih-dropzone:hover {
+            background: rgba(255,255,255,0.06);
+        }
+        .ih-dropzone.is-dragover {
+            border-color: var(--primary-color, #00CED1);
+            background: rgba(0,206,209,0.08);
+            transform: scale(1.01);
+        }
+        .ih-dropzone svg { width: 34px; height: 34px; color: var(--primary-color, #00CED1); }
+        .ih-drop-title { font-weight: 500; font-size: 14px; color: #fff; }
+        .ih-drop-sub    { font-size: 12.5px; color: rgba(255,255,255,0.45); }
+        .ih-drop-meta   { font-size: 11px; color: rgba(255,255,255,0.32); margin-top: 4px; }
+
+        .ih-progress-wrap {
+            display: none;
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .ih-progress-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+        .ih-progress-track {
+            width: 100%; height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .ih-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-color, #00CED1);
+            border-radius: 4px;
+            transition: width 0.15s;
+        }
+
+        .ih-error {
+            display: none;
+            width: 100%;
+            font-size: 13px;
+            color: #ff8b8b;
+            background: rgba(255,90,90,0.1);
+            border: 1px solid rgba(255,90,90,0.3);
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .ih-result { display: none; width: 100%; }
+        .ih-embed {
+            display: flex;
+            border-left: 3px solid var(--primary-color, #00CED1);
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .ih-embed-inner { padding: 14px; display: flex; flex-direction: column; gap: 6px; width: 100%; min-width: 0; }
+        .ih-embed-brand {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px;
+            text-transform: uppercase; color: var(--primary-color, #00CED1);
+        }
+        .ih-embed-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary-color, #00CED1); }
+        .ih-embed-filename { font-size: 13.5px; font-weight: 600; color: #fff; word-break: break-all; }
+        .ih-embed-sub { font-size: 11px; color: rgba(255,255,255,0.4); }
+        .ih-embed-thumb {
+            margin-top: 4px;
+            max-height: 220px;
+            width: auto;
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            object-fit: contain;
+        }
+
+        .ih-link-row { margin-top: 14px; display: flex; gap: 8px; }
+        .ih-link-input {
+            flex: 1; min-width: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12.5px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 9px 10px;
+            color: #fff;
+        }
+        .ih-copy-btn {
+            flex-shrink: 0;
+            background: var(--primary-color, #00CED1);
+            color: #06181a;
+            font-weight: 700;
+            font-size: 12.5px;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 14px;
+            cursor: pointer;
+            transition: filter 0.15s;
+        }
+        .ih-copy-btn:hover { filter: brightness(1.1); }
+        .ih-copy-btn.copied { background: #28c840; color: #06180a; }
+
+        .ih-links-foot {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11.5px;
+        }
+        .ih-links-foot a, .ih-links-foot button {
+            color: rgba(255,255,255,0.45);
+            text-decoration: underline dotted;
+            text-underline-offset: 2px;
+            background: none; border: none; cursor: pointer;
+            font-family: inherit; font-size: inherit;
+            padding: 0;
+        }
+        .ih-links-foot a:hover, .ih-links-foot button:hover { color: rgba(255,255,255,0.8); }
+
+        .ih-not-configured {
+            display: none;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* contact form */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .contact-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .contact-authed-as {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+        .contact-authed-as img {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .contact-authed-as .contact-authed-warn {
+            color: #febc2e;
+        }
+        .contact-authed-as a {
+            color: var(--primary-color, #00CED1);
+            text-decoration: underline dotted;
+            text-underline-offset: 2px;
+        }
+        .contact-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.42);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+        .contact-input {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 8px;
+            padding: 9px 13px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s, background 0.2s;
+            caret-color: var(--primary-color, #00CED1);
+        }
+        .contact-input:focus {
+            border-color: var(--primary-color, #00CED1);
+            background: rgba(255,255,255,0.07);
+        }
+        .contact-textarea {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 8px;
+            padding: 12px 13px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            outline: none;
+            resize: none;
+            height: 152px;
+            width: 100%;
+            line-height: 1.6;
+            transition: border-color 0.2s, background 0.2s;
+            caret-color: var(--primary-color, #00CED1);
+        }
+        .contact-textarea:focus {
+            border-color: var(--primary-color, #00CED1);
+            background: rgba(255,255,255,0.07);
+        }
+        .contact-input::placeholder,
+        .contact-textarea::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+        .contact-footer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 2px;
+        }
+        .contact-status {
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            color: rgba(255,255,255,0.5);
+            min-height: 16px;
+            transition: color 0.25s;
+        }
+        .contact-status.success { color: #23a55a; }
+        .contact-status.error   { color: #f23f43; }
+        .contact-send-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.22);
+            color: white;
+            border-radius: 20px;
+            padding: 8px 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.22s;
+            user-select: none;
+        }
+        .contact-send-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--primary-color, #00CED1);
+            box-shadow: 0 0 12px rgba(0,206,209,0.3);
+        }
+        .contact-send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 430px) {
+            #contact-block     { width: 90vw; max-width: 350px; padding: 14px; }
+            .contact-textarea  { height: 110px; }
+            #imagehost-block   { width: 92vw; max-width: 360px; height: 78vh; }
+            #terminal-window   { width: 92vw; height: 82vh; }
+            #terminal-ascii    { font-size: 8px; }
+        }
+        /* ══════════════════════════════════════════════════════════════
+           REPO DETAIL TAB (in-page README viewer overlay)
+           ══════════════════════════════════════════════════════════════ */
+        .repo-tab-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(3px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .repo-tab {
+            position: relative;
+            width: 780px;
+            max-width: 100%;
+            max-height: 86vh;
+            background: rgba(8,8,16,0.94);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+        .home-theme  .repo-tab { border-color: rgba(0,195,255,0.5); }
+        .anime-theme .repo-tab { border-color: rgba(255,0,0,0.5); }
+
+        .repo-tab-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            z-index: 2;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .repo-tab-close:hover { background: rgba(255,255,255,0.18); color: #fff; transform: scale(1.1); }
+
+        .repo-tab-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 28px 56px 20px 26px;
+            flex-shrink: 0;
+        }
+        .repo-tab-header-left { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+        .repo-tab-title {
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1.15;
+            letter-spacing: 0.5px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            word-break: break-word;
+        }
+        .repo-tab-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .repo-tab-tag {
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.3px;
+            color: var(--primary-color, #00CED1);
+            background: rgba(var(--primary-rgb, 0,206,209), 0.12);
+            border: 1px solid rgba(var(--primary-rgb, 0,206,209), 0.35);
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+        .repo-tab-loc {
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--primary-color, #00CED1);
+            letter-spacing: 0.3px;
+        }
+        .repo-tab-actions { display: flex; gap: 12px; flex-shrink: 0; }
+        .repo-tab-action  { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .repo-tab-action-box {
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+            color: inherit;
+            width: 72px; height: 72px;
+            border-radius: 14px;
+            background: rgba(10,10,10,0.75);
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+        }
+        .repo-tab-action-box:hover {
+            transform: translateY(-3px) scale(1.06);
+            border-color: var(--primary-color, #00CED1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 16px rgba(var(--primary-rgb,0,206,209),0.35);
+        }
+        .repo-tab-action-box.repo-tab-action-box--disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .repo-tab-action-label {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        .repo-tab-separator { width: 100%; height: 1px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+
+        .repo-tab-body { overflow-y: auto; padding: 22px 26px 30px; flex: 1; }
+        .repo-tab-body::-webkit-scrollbar { width: 8px; }
+        .repo-tab-body::-webkit-scrollbar-track { background: transparent; }
+        .repo-tab-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+        .repo-tab-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.28); }
+
+        .repo-tab-readme { color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.7; font-family: 'Courier New', monospace; }
+        .repo-tab-readme h1, .repo-tab-readme h2, .repo-tab-readme h3, .repo-tab-readme h4 { color: #fff; margin: 22px 0 10px; line-height: 1.3; }
+        .repo-tab-readme h1:first-child, .repo-tab-readme h2:first-child { margin-top: 0; }
+        .repo-tab-readme h1 { font-size: 21px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; }
+        .repo-tab-readme h2 { font-size: 17px; border-bottom: 1px solid rgba(255,255,255,0.1);  padding-bottom: 6px; }
+        .repo-tab-readme h3 { font-size: 15px; color: var(--primary-color, #00CED1); }
+        .repo-tab-readme h4 { font-size: 13px; color: rgba(255,255,255,0.85); }
+        .repo-tab-readme p  { margin: 10px 0; }
+        .repo-tab-readme a  { color: var(--primary-color, #00CED1); text-decoration: none; }
+        .repo-tab-readme a:hover { text-decoration: underline; }
+        .repo-tab-readme strong { color: #fff; }
+        .repo-tab-readme code {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+            color: #ffd479;
+        }
+        .repo-tab-readme pre {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 12px 14px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .repo-tab-readme pre code { background: none; border: none; padding: 0; color: rgba(255,255,255,0.85); }
+        .repo-tab-readme ul, .repo-tab-readme ol { margin: 8px 0 8px 22px; }
+        .repo-tab-readme li { margin: 4px 0; }
+        .repo-tab-readme hr { border: none; height: 1px; background: rgba(255,255,255,0.15); margin: 20px 0; }
+        .repo-tab-readme blockquote {
+            border-left: 3px solid var(--primary-color, #00CED1);
+            padding: 4px 14px;
+            margin: 12px 0;
+            color: rgba(255,255,255,0.55);
+        }
+        .repo-tab-readme table { border-collapse: collapse; margin: 12px 0; width: 100%; font-size: 12.5px; }
+        .repo-tab-readme th, .repo-tab-readme td { border: 1px solid rgba(255,255,255,0.15); padding: 6px 10px; text-align: left; }
+        .repo-tab-readme th { background: rgba(255,255,255,0.06); color: #fff; }
+
+        @media (max-width: 430px) {
+            .repo-tab-header      { flex-direction: column; padding: 24px 46px 16px 20px; }
+            .repo-tab-title       { font-size: 23px; }
+            .repo-tab-actions     { align-self: flex-start; }
+            .repo-tab-action-box  { width: 56px; height: 56px; font-size: 22px; border-radius: 12px; }
+            .repo-tab-body        { padding: 16px 18px 24px; }
+            .repo-tab-readme      { font-size: 13px; }
+        }
+    .placeholder-link { cursor: default; opacity: .72; }\n    .placeholder-link:hover { opacity: 1; }\n    
+        /* ══════════════════════════════════════════════════════════════════════════
+           PREMIUM REPOSITORY CARD HOVER FX
+           ══════════════════════════════════════════════════════════════════════════ */
+        .repo-card {
+          --repo-mx: 50%;
+          --repo-my: 50%;
+          --repo-rx: 0deg;
+          --repo-ry: 0deg;
+          isolation: isolate;
+          transform: perspective(900px) translateZ(0) rotateX(0deg) rotateY(0deg) translateY(0);
+          transform-style: preserve-3d;
+          will-change: transform;
+          transition:
+            background 0.28s ease,
+            border-color 0.28s ease,
+            box-shadow 0.28s ease,
+            transform 0.18s ease-out;
+        }
+        .repo-card::before {
+          z-index: -2;
+          opacity: 0;
+          background:
+            radial-gradient(circle at var(--repo-mx) var(--repo-my),
+              rgba(var(--primary-rgb, 0,206,209), 0.24) 0,
+              rgba(var(--primary-rgb, 0,206,209), 0.08) 18%,
+              transparent 48%),
+            linear-gradient(135deg,
+              rgba(var(--primary-rgb, 0,206,209), 0.12),
+              transparent 45%,
+              rgba(255,255,255,0.04));
+          transition: opacity 0.3s ease;
+        }
+        .repo-card::after {
+          content: '';
+          position: absolute;
+          inset: -45%;
+          z-index: -1;
+          pointer-events: none;
+          background: linear-gradient(112deg,
+            transparent 38%,
+            rgba(255,255,255,0.02) 44%,
+            rgba(255,255,255,0.34) 50%,
+            rgba(255,255,255,0.02) 56%,
+            transparent 62%);
+          transform: translateX(-48%) rotate(7deg);
+          opacity: 0;
+          transition: opacity 0.25s ease;
+        }
+        .repo-card--hovering,
+        .repo-card:hover {
+          background: rgba(255,255,255,0.095);
+          border-color: rgba(255,255,255,0.3);
+          box-shadow:
+            0 16px 35px rgba(0,0,0,0.28),
+            0 0 0 1px rgba(var(--primary-rgb,0,206,209),0.08),
+            0 0 26px rgba(var(--primary-rgb,0,206,209),0.14);
+          transform: perspective(900px)
+                     translateZ(12px)
+                     rotateX(var(--repo-rx))
+                     rotateY(var(--repo-ry))
+                     translateY(-6px)
+                     scale(1.012);
+        }
+        .repo-card--hovering::before,
+        .repo-card:hover::before { opacity: 1; }
+        .repo-card--hovering::after,
+        .repo-card:hover::after {
+          opacity: 1;
+          animation: repo-card-sweep 1.05s cubic-bezier(.2,.65,.25,1) both;
+        }
+        @keyframes repo-card-sweep {
+          from { transform: translateX(-48%) rotate(7deg); }
+          to   { transform: translateX(48%) rotate(7deg); }
+        }
+        .repo-icon-wrap {
+          transform: translateZ(22px);
+          transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+        }
+        .repo-card--hovering .repo-icon-wrap,
+        .repo-card:hover .repo-icon-wrap {
+          border-color: rgba(var(--primary-rgb,0,206,209),0.32);
+          box-shadow: 0 0 22px rgba(var(--primary-rgb,0,206,209),0.18);
+          transform: translateZ(22px) scale(1.035) rotate(-1deg);
+        }
+        .repo-icon {
+          transition: transform 0.3s cubic-bezier(.2,.75,.25,1), filter 0.3s ease;
+        }
+        .repo-card--hovering .repo-icon,
+        .repo-card:hover .repo-icon {
+          transform: scale(1.06);
+          filter: saturate(1.12) contrast(1.04);
+        }
+        .repo-info {
+          transform: translateZ(18px);
+          transition: transform 0.22s ease;
+        }
+        .repo-card--hovering .repo-info,
+        .repo-card:hover .repo-info {
+          transform: translateZ(18px) translateX(2px);
+        }
+        .repo-name,
+        .repo-url,
+        .repo-lines {
+          transition: transform 0.22s ease, text-shadow 0.22s ease, color 0.22s ease;
+        }
+        .repo-card--hovering .repo-name,
+        .repo-card:hover .repo-name {
+          text-shadow: 0 0 14px rgba(var(--primary-rgb,0,206,209),0.3);
+        }
+        .repo-card--hovering .repo-lines,
+        .repo-card:hover .repo-lines {
+          text-shadow: 0 0 10px rgba(var(--primary-rgb,0,206,209),0.34);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .repo-card,
+          .repo-icon-wrap,
+          .repo-icon,
+          .repo-info { transition: none !important; transform: none !important; }
+          .repo-card::after { display: none !important; }
+        }
+        
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Retro+Gaming&display=swap" rel="stylesheet">
+</head>
+<body class="home-theme" onload="initMedia()">
+
+    <div class="custom-cursor"></div>
+
+    <div class="container">
+
+        <video id="background" autoplay loop muted playsinline webkit-playsinline>
+            <source src="assets/background.mp4" type="video/mp4">
+        </video>
+
+        <div class="glitch-overlay"></div>
+        <div id="hacker-overlay" class="hidden"></div>
+        <div id="snow-overlay"   class="hidden"></div>
+
+        <div id="profile-block">
+            <div class="profile-header">
+
+                <div class="profile-container">
+                    <img src="assets/profile2.png" alt="Profile" class="profile-picture">
+                </div>
+
+                <div class="profile-info">
+                    <div class="name-and-badges">
+                        <div id="profile-name">Coco</div>
+                        <img src="assets/troll.png" alt="Troll" id="troll-trigger" title="???">
+                    </div>
+
+                    <div id="discord-presence">
+                        <span id="presence-dot" class="presence-dot offline"></span>
+                        <span id="presence-text">Fetching status...</span>
+                    </div>
+
+                    <div id="profile-bio"></div>
+
+                    <!-- ── Tag chips below bio ─────────────────────────── -->
+                    <div id="bio-extras">
+                        <span class="bio-tag">Coco on Top</span>
+                        <span class="bio-tag">Fuck Netanyahu</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bio-separator"></div>
+
+            <div class="profile-footer">
+                <div class="social-links">
+                    <a href="https://discord.gg/4E3a2rXCuV" class="social-popup-trigger placeholder-link" data-social-name="Discord" data-social-icon="assets/discord.gif" onclick="return false;">
+                        <img src="assets/discord.gif" alt="Discord" class="social-icon">
+                    </a>
+                    <a href="https://www.roblox.com/users/1218220381/profile" class="social-popup-trigger placeholder-link" data-social-name="Roblox" data-social-icon="assets/roblox.gif" onclick="return false;">
+                        <img src="assets/roblox.gif" alt="Roblox" class="social-icon">
+                    </a>
+                    <a href="https://www.instagram.com/cocotoenails/" class="social-popup-trigger placeholder-link" data-social-name="Instagram" data-social-icon="assets/snapchat.gif" onclick="return false;">
+                        <img src="assets/snapchat.gif" alt="SnapChat" class="social-icon">
+                    </a>
+                    <a href="https://www.tiktok.com/@officialmagwinya" class="social-popup-trigger placeholder-link" data-social-name="TikTok" data-social-icon="assets/steam.gif" onclick="return false;">
+                        <img src="assets/tiktok.gif" alt="Steam" class="social-icon">                        
+                    </a>
+                </div>
+
+                <div class="visitor-counter">
+                    <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    <span id="visitor-count">...</span>
+                    <span class="tooltip">Profile Views</span>
+                </div>
+            </div>
+
+            <!-- ── Music Player ─────────────────────────────────────── -->
+            <div class="music-player" id="music-player">
+                <div class="song-title" id="song-title">♪ —</div>
+                <div class="seek-row">
+                    <span class="time-label" id="current-time">0:00</span>
+                    <input id="seek-bar" type="range" min="0" max="100" step="0.1" value="0">
+                    <span class="time-label" id="duration-time">0:00</span>
+                </div>
+                <div class="player-btns">
+                    <button class="player-btn" id="btn-seek-back" title="Back 5 seconds">-5</button>
+                    <button class="player-btn" id="btn-play-pause" title="Play / Pause">▶</button>
+                    <button class="player-btn" id="btn-seek-fwd"  title="Forward 5 seconds">+5</button>
+                    <button class="player-btn" id="btn-skip"      title="Next Song">⏭</button>
+                    <button class="player-btn" id="btn-loop"      title="Toggle Loop">🔂</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Self-Hosted Git Replica Block ─────────────────────────────── -->
+        <div id="git-block">
+
+            <!-- header -->
+            <div class="gh-header">
+                <div class="gh-header-left">
+                    <div class="gh-label">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="opacity:.6">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path>
+                        </svg>
+                        Stats
+                    </div>
+                    <div class="gh-title">Self-Hosted Git Replica</div>
+                    <p class="gh-url" style="cursor:default;">gg.overgrown.site.je/repo-coco</p>
+                    <p class="gh-desc">Below are some of my repositories — hosted right here, no third party involved.</p>
+                    <p class="gh-desc">Every card is a self-hosted repository snapshot. Downloads are generated on demand in memory — no bundle or ZIP is stored.</p>
+                    <div class="gh-follow-stats" id="gh-follow-stats" style="display:none;">
+                        <span class="gh-follow-link"><span id="gh-clones-count">0</span> clones</span>, <span class="gh-follow-link"><span id="gh-downloads-count">0</span> downloads</span>
+                    </div>
+                </div>
+                <div class="gh-logo-box">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" class="gh-logo-img" id="gh-logo-img" aria-label="Self-Hosted Git">
+                        <circle cx="6" cy="6" r="2.2"></circle>
+                        <circle cx="6" cy="18" r="2.2"></circle>
+                        <circle cx="18" cy="9" r="2.2"></circle>
+                        <path stroke-linecap="round" d="M6 8.2V15.8"></path>
+                        <path stroke-linecap="round" d="M6 8.2c0 4 3 5.2 6.5 5.2H16"></path>
+                        <path stroke-linecap="round" d="M18 11.2v0.1"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- separator -->
+            <div class="gh-separator"></div>
+
+            <!-- repo grid: populated at runtime from stuff.txt, see loadRepoConfig() in script.js -->
+            <div class="gh-repos" id="gh-repos">
+                <div style="opacity:.5;padding:12px;">⏳ Loading repos…</div>
+            </div><!-- /gh-repos -->
+
+        </div><!-- /git-block -->
+
+        <!-- ── Repo Detail Tab (in-page README viewer) ──────────────────────── -->
+        <div class="repo-tab-overlay" id="repo-tab-overlay">
+            <div class="repo-tab" id="repo-tab">
+                <button class="repo-tab-close" id="repo-tab-close" title="Close" aria-label="Close">✕</button>
+
+                <div class="repo-tab-header">
+                    <div class="repo-tab-header-left">
+                        <div class="repo-tab-title" id="repo-tab-title">Repo</div>
+                        <div class="repo-tab-tags" id="repo-tab-tags"></div>
+                        <div class="repo-tab-loc" id="repo-tab-loc">⏳ loading...</div>
+                        <div class="repo-tab-stats" id="repo-tab-stats">🔗 0 clones · ⬇️ 0 downloads</div>
+                    </div>
+                    <div class="repo-tab-actions">
+                        <div class="repo-tab-action">
+                            <a class="repo-tab-action-box" id="repo-tab-open-link" href="#" target="_blank" rel="noopener" title="Open repo page">🔗</a>
+                            <span class="repo-tab-action-label">Open</span>
+                        </div>
+                        <div class="repo-tab-action">
+                            <button type="button" class="repo-tab-action-box" id="repo-tab-bundle-btn" title="Generate Git bundle in memory">⛓</button>
+                            <span class="repo-tab-action-label">Bundle</span>
+                        </div>
+                        <div class="repo-tab-action">
+                            <button type="button" class="repo-tab-action-box" id="repo-tab-zip-btn" title="Generate ZIP in memory">⬇️</button>
+                            <span class="repo-tab-action-label">ZIP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="repo-tab-separator"></div>
+
+                <div class="repo-tab-body">
+                    <div class="repo-tab-readme" id="repo-tab-readme"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Contact Block ─────────────────────────────────────────────── -->
+        <div id="contact-block">
+
+            <!-- header -->
+            <div class="gh-header">
+                <div class="gh-header-left">
+                    <div class="gh-label">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="opacity:.6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Message
+                    </div>
+                    <div class="gh-title">Contact</div>
+                    <p class="gh-desc">Send something to me if you would like to.</p>
+                </div>
+                <div class="gh-logo-box">
+                    <img src="assets/discord.gif" alt="Contact" class="gh-logo-img">
+                </div>
+            </div>
+
+            <!-- separator -->
+            <div class="gh-separator"></div>
+
+            <!-- form -->
+            <div class="contact-form">
+                <div class="contact-field">
+                    <label class="contact-label">Discord account</label>
+                    <div id="contact-discord-user" class="contact-textarea contact-discord-identity"
+                         style="min-height:unset;display:flex;align-items:center;gap:10px;">
+                        <img id="contact-discord-avatar"
+                             src="assets/profile2.png"
+                             alt="Discord avatar"
+                             style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
+                        <span id="contact-discord-name">Loading Discord account…</span>
+                    </div>
+                </div>
+                <div class="contact-field">
+                    <label class="contact-label">Message</label>
+                    <textarea id="contact-message" class="contact-textarea"
+                              placeholder="Write whatever you'd like…"></textarea>
+                </div>
+                <div class="contact-footer-row">
+                    <span id="contact-status" class="contact-status"></span>
+                    <button id="contact-send" class="contact-send-btn">Send ▶</button>
+                </div>
+            </div>
+
+        </div><!-- /contact-block -->
+
+        <!-- ── Image Host Tab ────────────────────────────────────────────── -->
+        <div id="imagehost-block">
+            <div class="ih-titlebar">
+                <div class="ih-titlebar-dots">
+                    <span class="term-dot term-dot--red"></span>
+                    <span class="term-dot term-dot--yellow"></span>
+                    <span class="term-dot term-dot--green"></span>
+                </div>
+                <div class="ih-title">image-host — PixelDrop</div>
+            </div>
+            <div class="ih-body">
+                <div class="ih-heading">
+                    <h2>Simple image hosting.</h2>
+                    <p>Drop an image, get a direct link that embeds beautifully in Discord.</p>
+                </div>
+
+                <div id="ih-idle" style="width:100%;">
+                    <div id="ih-dropzone" class="ih-dropzone" tabindex="0" role="button" aria-label="Upload an image">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 0L7 9m5-5l5 5M5 20h14"/>
+                        </svg>
+                        <div class="ih-drop-title">Drag &amp; drop an image</div>
+                        <div class="ih-drop-sub">or click to browse</div>
+                        <div class="ih-drop-meta">PNG · JPG · GIF · WEBP — up to 10MB</div>
+                    </div>
+                    <input id="ih-file-input" type="file" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none;">
+                </div>
+
+                <div id="ih-progress-wrap" class="ih-progress-wrap">
+                    <div id="ih-progress-label" class="ih-progress-label">Uploading…</div>
+                    <div class="ih-progress-track"><div id="ih-progress-bar" class="ih-progress-bar"></div></div>
+                </div>
+
+                <div id="ih-error" class="ih-error"></div>
+
+                <div id="ih-result" class="ih-result">
+                    <div class="ih-embed">
+                        <div class="ih-embed-inner">
+                            <div class="ih-embed-brand"><span class="ih-embed-dot"></span>PixelDrop</div>
+                            <div id="ih-embed-filename" class="ih-embed-filename"></div>
+                            <div class="ih-embed-sub">Shared via PixelDrop</div>
+                            <img id="ih-embed-thumb" class="ih-embed-thumb" alt="Uploaded image preview">
+                        </div>
+                    </div>
+                    <div class="ih-link-row">
+                        <input id="ih-link-input" class="ih-link-input" readonly>
+                        <button id="ih-copy-btn" class="ih-copy-btn">Copy link</button>
+                    </div>
+                    <div class="ih-links-foot">
+                        <a id="ih-raw-link" href="#" target="_blank" rel="noopener noreferrer">Direct image link ↗</a>
+                        <button id="ih-upload-another">Upload another</button>
+                    </div>
+                </div>
+
+                <div id="ih-not-configured" class="ih-not-configured">
+                    Upload backend isn't configured yet — check <code>IMAGE_HOST_UPLOAD_URL</code> in script.js.
+                </div>
+            </div>
+        </div><!-- /imagehost-block -->
+
+        <!-- ── Scroll hint ────────────────────────────────────────────── -->
+        <div id="scroll-hint">
+            <div class="sh-arrow">▼</div>
+            <span>scroll</span>
+        </div>
+
+        <!-- ── Theme buttons ──────────────────────────────────────────── -->
+        <div class="controls">
+            <div id="home-theme"  class="theme-button">1</div>
+            <div id="anime-theme" class="theme-button">2</div>
+            <div class="page-sep"></div>
+            <div id="page-dot-0" class="page-dot active" title="Profile"></div>
+            <div id="page-dot-1" class="page-dot"        title="Repos"></div>
+            <div id="page-dot-2" class="page-dot"        title="Contact"></div>
+            <div id="page-dot-3" class="page-dot"        title="Image Host"></div>
+        </div>
+
+        <!-- ── Top controls (volume + transparency + trail) ──────────── -->
+        <div class="top-controls">
+            <div class="volume-control">
+                <svg id="volume-icon" class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                </svg>
+                <input id="volume-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.3">
+            </div>
+            <div class="transparency-control">
+                <svg class="transparency-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.15">
+            </div>
+            <!-- Trail style picker: cycles dots → sparkles → comet → off -->
+            <div id="trail-btn" class="trail-button" title="Cursor Trail Style">⬤</div>
+        </div>
+
+        <!-- ── Side nav buttons (forward + backward cycling) ───────────── -->
+        <div id="side-nav-group">
+            <button id="side-nav-btn" aria-label="Next page">
+                <span id="side-nav-arrow">▶</span>
+                <span id="side-nav-label">Repos</span>
+            </button>
+            <button id="side-nav-btn-back" aria-label="Previous page">
+                <span id="side-nav-arrow-back">◀</span>
+                <span id="side-nav-label-back">Profile</span>
+            </button>
+        </div>
+
+        <!-- ── Rickroll DVD-bounce window ─────────────────────────────── -->
+        <!-- rickroll-window handles bounce position (translate); the inner
+             rickroll-tilt wrapper handles cursor tilt (rotation), so the two
+             transforms don't fight over the same element. -->
+        <div id="rickroll-window">
+            <div id="rickroll-tilt">
+                <div id="rickroll-titlebar">
+                    <span>GET RICKROLLED NOOB</span>
+                    <span id="rickroll-close">✕</span>
+                </div>
+                <video id="rickroll-video" src="assets/Rickroll.mp4" preload="none" loop playsinline></video>
+            </div>
+        </div>
+
+        <!-- ── Social link popup windows (created dynamically by script.js) ── -->
+        <div id="social-popup-layer"></div>
+
+    </div><!-- /container -->
+
+    <!-- single audio element – playlist managed in script.js -->
+    <audio id="main-audio"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="runtime-repo-artifacts.js"></script>
+    <script src="coco-script.js"></script>
+<a id="elite-hub-switcher" href="profile-selector.html" aria-label="Open Elite Hub profile selector">Elite Hub</a>
+<style>
+#elite-hub-switcher{position:fixed;top:18px;left:18px;z-index:1000;padding:8px 12px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);color:rgba(255,255,255,.65);text-decoration:none;font:11px "Courier New",monospace;letter-spacing:.08em;transition:.2s}
+#elite-hub-switcher:hover{color:#fff;border-color:rgba(0,206,209,.4);transform:translateY(-1px)}
+</style>
+</body>
+</html>
+

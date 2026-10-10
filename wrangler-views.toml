@@ -1,0 +1,7 @@
+name = "xenostopic-views"
+main = "views-worker.js"
+compatibility_date = "2025-01-01"
+
+kv_namespaces = [
+  { binding = "VIEWS_KV", id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID" }
+]

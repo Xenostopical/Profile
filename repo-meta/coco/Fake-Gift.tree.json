@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "repo": "Fake-Gift",
+  "entries": [
+    {
+      "path": "Fake-Gift",
+      "type": "file",
+      "size": 502,
+      "lines": 8,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 133,
+      "lines": 10,
+      "binary": false
+    }
+  ]
+}

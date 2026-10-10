@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "repo": "coco-labs",
+  "entries": [
+    {
+      "path": "README.md",
+      "type": "file",
+      "size": 168,
+      "lines": 5,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 100,
+      "lines": 6,
+      "binary": false
+    }
+  ]
+}

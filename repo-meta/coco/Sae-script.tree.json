@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "repo": "Sae-script",
+  "entries": [
+    {
+      "path": "Chilli by printed.lua",
+      "type": "file",
+      "size": 718348,
+      "lines": 30584,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 130,
+      "lines": 10,
+      "binary": false
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "repo": "project-vertex",
+  "entries": [
+    {
+      "path": "LICENSE",
+      "type": "file",
+      "size": 73,
+      "lines": 1,
+      "binary": false
+    },
+    {
+      "path": "README.md",
+      "type": "file",
+      "size": 645,
+      "lines": 15,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 106,
+      "lines": 6,
+      "binary": false
+    }
+  ]
+}

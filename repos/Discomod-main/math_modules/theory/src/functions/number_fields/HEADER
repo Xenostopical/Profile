@@ -1,0 +1,213 @@
+Function: _header_number_fields
+Class: header
+Section: number_fields
+Doc:
+ \section{General number fields}
+
+ This section introduces functions related to the arithmetic of general
+ number fields. Functions specific to quadratic number fields are found in
+ \secref{se:arithmetic} (Arithmetic functions); functions related to Galois
+ theory and class field theory are found in \secref{se:CFT}; functions related
+ to relative extensions are found in \secref{se:rnf}
+
+ \subsec{Number fields structures} %GPHELPskip
+
+ Let $K = \Q[X] / (T)$ be a number field, where $T\in\Z[X]$ is monic,
+ and let $\Z_{K}$ be its ring of integers. Three basic number field
+ structures can be attached to $K$ in GP:
+
+ \item $\tev{nf}$ denotes a number field, i.e.~a data structure output by
+ \tet{nfinit}. This contains the basic arithmetic data attached to the
+ number field: signature, maximal order (given by a basis \kbd{nf.zk}),
+ discriminant, defining polynomial $T$, etc.
+
+ \item $\tev{bnf}$ denotes a ``Buchmann's number field'', i.e.~a
+ data structure output by \tet{bnfinit}. This contains
+ $\var{nf}$ and the deeper invariants of the field: its units $U(K)$ and
+ class group $\Cl(K)$, as abstract abelian groups and in terms of generators
+ and relations). As well as technical data allowing to solve discrete
+ logarithm problems in these two groups (write elements as products of
+ fixed generators).
+
+ \item $\tev{bnr}$ denotes a ``ray number field'', i.e.~a data structure
+ output by \kbd{bnrinit}, corresponding to the ray class group structure of
+ the field, for some modulus $f$. It contains a \var{bnf}, the modulus
+ $f$, the ray class group $\Cl_{f}(K)$ and data attached to
+ the discrete logarithm problem therein.
+
+ Functions related to these structures, share the prefix \kbd{nf},
+ \kbd{bnf}, \kbd{bnr} respectively. They take as first argument a number
+ field structure of that type, respectively output by \kbd{nfinit},
+ \kbd{bnfinit}, and \kbd{bnrinit}. However, and even though it may not be
+ specified in the descriptions of the functions below, it is permissible, if
+ the function expects a $\var{nf}$, to use a $\var{bnf}$ instead. On the other
+ hand, if the function requires a \kbd{bnf}, it will \emph{not} launch
+ \kbd{bnfinit} for you, which is a costly operation. Instead, it will give you
+ a specific error message. In short, the types $$ \kbd{nf} \leq \kbd{bnf} \leq
+ \kbd{bnr}$$ are ordered, each function requires a minimal type to work
+ properly, but you may always substitute a larger type.
+
+ \subsec{Class group, units, and the GRH} %GPHELPskip
+
+ The \kbd{bnfinit} function implements the sub-exponential algorithms for
+ finding class and unit groups under \idx{GRH}, due to Hafner-McCurley,
+ \idx{Buchmann} and Cohen-Diaz-Olivier. If GRH is false, then the \var{bnf}
+ may be incorrect and all routines requiring a \var{bnf} argument may then
+ return wrong results, in particular \kbd{bnrinit}.
+
+ \misctitle{Important warning} Any of the class number, class group
+ structure, class group generators, regulator and fundamental units may be
+ wrong, independently of each other. And the same holds for ray class groups
+ and $S$-units. The only guarantee is that the units given generate a
+ subgroup of finite index in the full unit group. You must use
+ \kbd{bnfcertify} to certify the computations unconditionally.
+
+ Since this requires exponential time, we recomend to
+ compute as far as possible with provisional data then come back to certify
+ what is really needed. A good example is the \kbd{bnrclassfield} function:
+ once a class field is computed it is easy to check it has the expected
+ Galois group and ramification without certifying any \var{bnf} used in the
+ process.
+
+ \subsec{Member functions available for nf, bnf and bnr structures}%GPHELPskip
+
+ GP provides ``member functions'' to retrieve data from structures (once they
+ have been initialized of course). The relevant types of number fields are
+ indicated between parentheses: \smallskip
+
+ \sidx{member functions}
+ \settabs\+xxxxxxx&(\var{bnr},x&\var{bnf},x&nf\hskip2pt&)x&: &\cr
+ \+\tet{bid}    &(\var{bnr}&&&)&: & \var{bid} ideal structure for $(\Z_K/f)^*$.\cr
+
+ \+\tet{bnf}    &(\var{bnr},& \var{bnf}&&)&: & Buchmann's number field.\cr
+
+ \+\tet{clgp}  &(\var{bnr},& \var{bnf}&&)&: & classgroup. This one admits the
+ following three subclasses:\cr
+
+ \+      \quad \tet{cyc} &&&&&: & \quad cyclic decomposition
+  (SNF)\sidx{Smith normal form}.\cr
+
+ \+      \quad \kbd{gen}\sidx{gen (member function)} &&&&&: &
+  \quad generators.\cr
+
+ \+      \quad \tet{no}  &&&&&: & \quad number of elements.\cr
+
+ \+\tet{diff}  &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the different ideal.\cr
+
+ \+\tet{codiff}&(\var{bnr},& \var{bnf},& \var{nf}&)&: & the codifferent
+ (inverse of the different in the ideal group).\cr
+
+ \+\tet{disc} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & discriminant.\cr
+
+ \+\tet{fu}   &(          & \var{bnf}&&)&: & \idx{fundamental units}.\cr
+
+ \+\tet{index}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: &
+  \idx{index} of the power order in the ring of integers.\cr
+
+ \+\tet{mod}   &(\var{bnr}&&&)&: & modulus.\cr
+
+ \+\tet{nf}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & number field.\cr
+
+ \+\tet{pol}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & defining polynomial.\cr
+
+ \+\tet{r1} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the number
+ of real embeddings.\cr
+
+ \+\tet{r2} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the number
+ of pairs of complex embeddings.\cr
+
+ \+\tet{reg}  &(          & \var{bnf}&&)&: & regulator.\cr
+
+ \+\tet{roots}&(\var{bnr},& \var{bnf},& \var{nf}&)&: & roots of the
+ polynomial generating the field.\cr
+
+ \+\tet{sign} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & signature $[r1,r2]$.\cr
+
+ \+\tet{t2}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the $T_{2}$ matrix (see
+ \kbd{nfinit}).\cr
+
+ \+\tet{tu}   &(          & \var{bnf}&&)&: & a generator for the torsion
+ units.\cr
+
+ \+\tet{zk}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & integral basis, i.e.~a
+ $\Z$-basis of the maximal order.\cr
+
+ \+\tet{zkst}   &(\var{bnr}&&&)&: & structure of $(\Z_{K}/m)^{*}$.\cr
+
+ The member functions \kbd{.codiff}, \kbd{.t2} and \kbd{.zk} perform a
+ computation and are relatively expensive in large degree: move them out of
+ tight loops and store them in variables.
+
+ For instance, assume that $\var{bnf} = \kbd{bnfinit}(\var{pol})$, for some
+ polynomial. Then \kbd{\var{bnf}.clgp} retrieves the class group, and
+ \kbd{\var{bnf}.clgp.no} the class number. If we had set $\var{bnf} =
+ \kbd{nfinit}(\var{pol})$, both would have output an error message. All these
+ functions are completely recursive, thus for instance
+ \kbd{\var{bnr}.bnf.nf.zk} will yield the maximal order of \var{bnr}, which
+ you could get directly with a simple \kbd{\var{bnr}.zk}.
+
+ \subsec{Algebraic numbers and ideals} %GPHELPskip
+
+ \noindent An \tev{algebraic number} belonging to $K = \Q[X]/(T)$ is given as
+
+ \item a \typ{INT}, \typ{FRAC} or \typ{POL} (implicitly modulo $T$), or
+
+ \item a \typ{POLMOD} (modulo $T$), or
+
+ \item a \typ{COL}~\kbd{v} of dimension $N = [K:\Q]$, representing
+ the element in terms of the computed integral basis, as
+ \kbd{sum(i = 1, N,~v[i] * nf.zk[i])}. Note that a \typ{VEC}
+ is not allowed.
+
+ \noindent Functions to manipulate elements in a number field share the
+ prefix \kbd{nfelt}: \kbd{nfeltadd}, \kbd{nfeltmul}, \kbd{nfeltnorm}, etc.
+ Their first argument is a number field structure, followed by other
+ operands. For instance \kbd{nfeltmul(K, x, y)} computes $xy$ in $K$.
+
+ \medskip
+
+ \noindent An \tev{ideal} is given in any of the following ways:
+
+ \item an algebraic number in one of the above forms, defining a principal ideal.
+
+ \item a prime ideal, as output by \kbd{idealprimedec} or \kbd{idealfactor}.
+
+ \item a \typ{MAT}, square and in Hermite Normal Form, whose columns
+ represent a $\Z$-basis of the ideal.
+
+ \noindent One may use \kbd{idealhnf} to convert any ideal to the last
+ (preferred) format. Functions to create or manipulate ideals in a number
+ field share the prefix \kbd{ideal}: \kbd{idealadd}, \kbd{idealmul},
+ \kbd{idealinv}, \kbd{idealnorm}, etc. Their first argument is a number field
+ structure, followed by other operands. For instance \kbd{idealmul(K, A, B)}
+ computes the ideal product $AB$. The \kbd{idealred} functions allows to
+ ``factor out'' a principal ideal $(t)$ from a fractional ideal $B$, writing
+ it as $B = tA$ where $A$ is an integral ideal whose norm is bounded in terms
+ of the discriminant of $K$.
+
+ \subsec{Extended ideals} %GPHELPskip
+ An \emph{extended ideal} \sidx{ideal (extended)} is a 2-component
+ vector $[A, t]$, where $A$ is an ideal as above and $t$ is an algebraic
+ number. It represent the ideal $(t)A$. This is useful whenever \tet{idealred}
+ is involved, implicitly working in the ideal class group, while keeping track
+ of principal ideals. The following multiplicative ideal operations
+ update the principal part: \kbd{idealmul}, \kbd{idealinv},
+ \kbd{idealsqr}, \kbd{idealpow} and \kbd{idealred}; e.g.~using \kbd{idealmul}
+ on $[A,t]$, $[B,u]$, we obtain $[AB, tu]$. In all other
+ functions, the extended part is silently discarded, e.g.~using
+ \kbd{idealadd} with the above input produces $A+B$.
+
+ The ``principal part'' $t$ in an extended ideal may be
+ represented in any of the above forms. \emph{Additionally}, and this is the
+ preferred form, as a factorization
+ matrix, or \teb{famat}. Such factorizations (in terms of number field
+ elements, not ideals!) can be multiplied in a formal way (generators merged,
+ exponents added), corresponding to the multiplication in $K$.
+ The empty factorization matrix \kbd{factor(1)} represents $1$ and acts
+ as neutral element.
+
+ When $t$ is such a factorization matrix, elements stay in factored form,
+ which is a convenient way to avoid coefficient explosion. To recover the
+ conventional expanded form, try \tet{nffactorback}; but many functions
+ already accept \var{famat}s as input and expanding huge elements should not
+ be necessary.

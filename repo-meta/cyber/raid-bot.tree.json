@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "repo": "raid-bot",
+  "entries": [
+    {
+      "path": "backups",
+      "type": "dir"
+    },
+    {
+      "path": ".DS_Store",
+      "type": "file",
+      "size": 8196,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "arial.ttf",
+      "type": "file",
+      "size": 275572,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "arialbd.ttf",
+      "type": "file",
+      "size": 352224,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "backups/.DS_Store",
+      "type": "file",
+      "size": 6148,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "backups/Faggot Roblox Server Scraped.json",
+      "type": "file",
+      "size": 339171,
+      "lines": 6546,
+      "binary": false
+    },
+    {
+      "path": "backups/guild_1035204601852461077_backup.json",
+      "type": "file",
+      "size": 4933458,
+      "lines": 103194,
+      "binary": false
+    },
+    {
+      "path": "backups/guild_1458398477175361585_backup.json",
+      "type": "file",
+      "size": 83201110,
+      "lines": 1744464,
+      "binary": false
+    },
+    {
+      "path": "backups/guild_1509209513385791598_backup.json",
+      "type": "file",
+      "size": 13548799,
+      "lines": 280984,
+      "binary": false
+    },
+    {
+      "path": "backups/guild_1517545654241726585_backup.json",
+      "type": "file",
+      "size": 2885916,
+      "lines": 58996,
+      "binary": false
+    },
+    {
+      "path": "backups/Mini Amine Scraped.json",
+      "type": "file",
+      "size": 4929854,
+      "lines": 103147,
+      "binary": false
+    },
+    {
+      "path": "backups/Radhika Server Scraped.json",
+      "type": "file",
+      "size": 190875242,
+      "lines": 3873325,
+      "binary": false
+    },
+    {
+      "path": "backups/Weird Server Scraped Data.json",
+      "type": "file",
+      "size": 527639094,
+      "lines": 10981330,
+      "binary": false
+    },
+    {
+      "path": "blankflood.txt",
+      "type": "file",
+      "size": 2008,
+      "lines": 1997,
+      "binary": false
+    },
+    {
+      "path": "config.json",
+      "type": "file",
+      "size": 136,
+      "lines": 6,
+      "binary": false
+    },
+    {
+      "path": "leaderboard.json",
+      "type": "file",
+      "size": 10874,
+      "lines": 549,
+      "binary": false
+    },
+    {
+      "path": "main.py",
+      "type": "file",
+      "size": 148225,
+      "lines": 5101,
+      "binary": false
+    },
+    {
+      "path": "premium.json",
+      "type": "file",
+      "size": 687,
+      "lines": 32,
+      "binary": false
+    },
+    {
+      "path": "presets.json",
+      "type": "file",
+      "size": 5144,
+      "lines": 12,
+      "binary": false
+    },
+    {
+      "path": "readme.md",
+      "type": "file",
+      "size": 888,
+      "lines": 46,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 132,
+      "lines": 10,
+      "binary": false
+    },
+    {
+      "path": "requirements.txt",
+      "type": "file",
+      "size": 49,
+      "lines": 5,
+      "binary": false
+    },
+    {
+      "path": "roasts.txt",
+      "type": "file",
+      "size": 40940,
+      "lines": 953,
+      "binary": false
+    },
+    {
+      "path": "servernuke.log",
+      "type": "file",
+      "size": 2406839,
+      "lines": 35436,
+      "binary": false
+    },
+    {
+      "path": "tester.py",
+      "type": "file",
+      "size": 977,
+      "lines": 49,
+      "binary": false
+    }
+  ]
+}

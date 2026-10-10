@@ -1,0 +1,4 @@
+)boot $SaveParseOnly := true
+)read komp_all.input
+)boot processGlobals()
+)boot make_databases2()

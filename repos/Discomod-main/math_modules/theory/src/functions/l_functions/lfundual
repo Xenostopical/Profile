@@ -1,0 +1,21 @@
+Function: lfundual
+Section: l_functions
+C-Name: lfundual
+Prototype: Gb
+Help: lfundual(L): creates the Ldata structure (without
+ initialization) corresponding to the dual L-function of L.
+Doc: creates the \kbd{Ldata} structure (without initialization) corresponding
+ to the dual L-function $\hat{L}$ of $L$. If $k$ and $\varepsilon$ are
+ respectively the weight and root number of $L$, then the following formula
+ holds outside poles, up to numerical errors:
+ $$\Lambda(L, s) = \varepsilon \Lambda(\hat{L}, k - s).$$
+
+ \bprog
+ ? L = lfunqf([1,2,3,4]); [N,k] = lfunparams(L);
+ ? M = lfundual(L); lfuncheckfeq(M)
+ %2 = -128
+ ? [r,R,w] = lfunrootres(L);
+ ? check(s) = exponent(lfunlambda(L, s) - w * lfunlambda(M, k-s));
+ ? check(1 + I*Pi)
+ %5 = -130
+ @eprog

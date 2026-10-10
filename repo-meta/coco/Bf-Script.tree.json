@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "repo": "Bf-Script",
+  "entries": [
+    {
+      "path": "Bloxfruitnovara",
+      "type": "file",
+      "size": 76529,
+      "lines": 1,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 137,
+      "lines": 10,
+      "binary": false
+    }
+  ]
+}

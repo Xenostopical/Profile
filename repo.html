@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Repo</title>
+  <link rel="icon" href="assets/profile.webp" type="image/webp">
+  <style>
+    :root {
+      --primary-color: #00CED1;
+      --background-dark: #08090d;
+      --text-color: #f4f5f9;
+      --muted: #9299aa;
+      --card: #11141b;
+      --border: rgba(255,255,255,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--background-dark);
+      color: var(--text-color);
+      padding: 24px 16px 60px;
+    }
+    main { max-width: 780px; margin: 0 auto; }
+
+    .repo-page-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: 0 25px 70px rgba(0,0,0,.45);
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .repo-page-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .repo-page-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .repo-page-titles { flex: 1; min-width: 200px; }
+    .repo-page-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .repo-page-sub { color: var(--muted); font-size: 13px; }
+    .repo-page-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .repo-page-tag {
+      font-size: 11px; padding: 3px 9px; border-radius: 999px;
+      background: rgba(0,206,209,.12); color: var(--primary-color);
+      border: 1px solid rgba(0,206,209,.3);
+    }
+    .repo-page-stats {
+      display: flex; gap: 16px; font-size: 13px; color: var(--muted);
+      margin-top: 10px; flex-wrap: wrap;
+    }
+    .repo-page-stats b { color: var(--text-color); }
+
+    .repo-page-code {
+      padding: 18px 22px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+      margin-bottom: 18px;
+    }
+    .repo-page-code-label { font-size: 12px; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+    .repo-page-code--plain { padding-bottom: 16px; }
+    .repo-page-code--plain .repo-page-clone-row { margin-bottom: 0; }
+    .repo-page-clone-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      background: #05060a; border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; margin-bottom: 14px;
+    }
+    .repo-page-clone-row code { flex: 1; min-width: 180px; font-size: 13px; word-break: break-all; }
+    .repo-page-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .repo-page-btn {
+      appearance: none; border: 1px solid var(--border); cursor: pointer;
+      border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600;
+      background: rgba(255,255,255,.04); color: var(--text-color);
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none;
+    }
+    .repo-page-btn:hover { background: rgba(255,255,255,.09); }
+    .repo-page-btn--primary { background: var(--primary-color); color: #05060a; border-color: var(--primary-color); }
+    .repo-page-btn--primary:hover { filter: brightness(1.08); }
+    .repo-page-btn.copied { background: rgba(0,206,209,.18); }
+    .repo-page-runtime-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .repo-page-btn:disabled { opacity:.55; cursor:wait; }
+
+    .repo-page-readme {
+      padding: 22px 26px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+      line-height: 1.65;
+    }
+    .repo-page-readme h1, .repo-page-readme h2, .repo-page-readme h3 { margin: 22px 0 10px; }
+    .repo-page-readme h1:first-child, .repo-page-readme h2:first-child, .repo-page-readme h3:first-child { margin-top: 0; }
+    .repo-page-readme p { margin: 10px 0; color: #d7d9e6; }
+    .repo-page-readme code { background: rgba(255,255,255,.08); padding: 2px 6px; border-radius: 5px; font-size: .9em; }
+    .repo-page-readme pre { background: #05060a; border: 1px solid var(--border); border-radius: 10px; padding: 14px; overflow-x: auto; margin: 12px 0; }
+    .repo-page-readme pre code { background: none; padding: 0; }
+    .repo-page-readme ul, .repo-page-readme ol { margin: 10px 0 10px 22px; color: #d7d9e6; }
+    .repo-page-readme a { color: var(--primary-color); }
+    .repo-page-readme blockquote { border-left: 3px solid var(--primary-color); padding-left: 12px; color: var(--muted); margin: 12px 0; }
+
+
+
+    .repo-browser {
+      display: grid;
+      grid-template-columns: minmax(220px, 285px) minmax(0, 1fr);
+      min-height: 430px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--card);
+      margin-bottom: 18px;
+      box-shadow: 0 25px 70px rgba(0,0,0,.35);
+    }
+    .repo-tree-panel {
+      border-right: 1px solid var(--border);
+      background: rgba(255,255,255,.018);
+      min-width: 0;
+    }
+    .repo-tree-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(17,20,27,.96);
+      backdrop-filter: blur(12px);
+      z-index: 2;
+    }
+    .repo-tree-head input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 9px 10px;
+      background: #080a0f;
+      color: var(--text-color);
+      outline: none;
+      font: inherit;
+      font-size: 12px;
+    }
+    .repo-tree-head input:focus { border-color: rgba(0,206,209,.55); box-shadow: 0 0 0 3px rgba(0,206,209,.08); }
+    .repo-tree {
+      padding: 9px;
+      max-height: 620px;
+      overflow: auto;
+      font-size: 13px;
+    }
+    .tree-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 7px;
+      min-height: 31px;
+      padding: 5px 8px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #dfe3ed;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .tree-row:hover { background: rgba(255,255,255,.05); }
+    .tree-row.active { background: rgba(0,206,209,.12); color: #fff; box-shadow: inset 2px 0 0 var(--primary-color); }
+    .tree-row.dir { color: #f2f4fa; font-weight: 600; }
+    .tree-indent { flex: 0 0 auto; width: 14px; }
+    .tree-icon { width: 16px; text-align: center; flex: 0 0 16px; opacity: .9; }
+    .tree-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tree-size { margin-left: auto; color: var(--muted); font-size: 10px; }
+
+    .repo-file-panel {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .repo-file-empty {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 40px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .repo-file-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(17,20,27,.96);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .repo-file-path {
+      flex: 1;
+      min-width: 160px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: #e9edf7;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .repo-file-meta { color: var(--muted); font-size: 11px; }
+    .repo-file-actions { display: flex; gap: 8px; }
+    .repo-file-code-wrap {
+      overflow: auto;
+      background: #06070b;
+      flex: 1;
+      min-height: 380px;
+    }
+    .repo-file-code {
+      margin: 0;
+      padding: 14px 0;
+      min-width: max-content;
+      color: #edf0f7;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      tab-size: 2;
+      white-space: pre;
+      counter-reset: line;
+    }
+    .repo-file-line {
+      display: block;
+      min-height: 1.65em;
+      padding-right: 24px;
+    }
+    .repo-file-line::before {
+      content: counter(line);
+      counter-increment: line;
+      display: inline-block;
+      width: 56px;
+      margin-right: 14px;
+      padding-left: 14px;
+      color: #596171;
+      user-select: none;
+      text-align: right;
+      border-right: 1px solid rgba(255,255,255,.06);
+    }
+    .repo-file-error { padding: 24px; color: #ff9f9f; }
+    .repo-browser-note {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    @media (max-width: 760px) {
+      .repo-browser { grid-template-columns: 1fr; }
+      .repo-tree-panel { border-right: 0; border-bottom: 1px solid var(--border); }
+      .repo-tree { max-height: 280px; }
+      .repo-file-code { font-size: 11px; }
+    }
+
+    .repo-page-back { display: inline-block; margin-bottom: 16px; color: var(--muted); text-decoration: none; font-size: 13px; }
+    .repo-page-back:hover { color: var(--text-color); }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="repo-page-back" id="repo-page-back" href="site.html">← Back to profile</a>
+
+    <div class="repo-page-header">
+      <div class="repo-page-icon" id="repo-page-icon">📦</div>
+      <div class="repo-page-titles">
+        <div class="repo-page-name" id="repo-page-name">Loading…</div>
+        <div class="repo-page-sub" id="repo-page-sub">repos/…</div>
+        <div class="repo-page-tags" id="repo-page-tags"></div>
+        <div class="repo-page-stats">
+          <span>📄 <b id="repo-page-lines">—</b> lines</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="repo-page-code repo-page-code--plain">
+      <div class="repo-page-code-label">Source</div>
+      <div class="repo-page-clone-row">
+        <code id="repo-page-root-path">Loading repository…</code>
+        <div class="repo-page-runtime-actions">
+          <button type="button" class="repo-page-btn repo-page-btn--primary" id="repo-page-bundle-btn">Generate Git bundle</button>
+          <button type="button" class="repo-page-btn" id="repo-page-zip-btn">Generate ZIP</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="repo-browser-note">Browse every public file and directory. Click a file to view the complete raw contents line by line — no syntax highlighting. Bundles and ZIPs are generated on demand in memory and are never stored on the site.</p>
+    <section class="repo-browser" aria-label="Repository file browser">
+      <aside class="repo-tree-panel">
+        <div class="repo-tree-head">
+          <input id="repo-tree-search" type="search" placeholder="Filter files…" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="repo-tree" id="repo-tree" aria-label="Repository directories and files"></div>
+      </aside>
+      <section class="repo-file-panel" aria-label="File contents">
+        <div class="repo-file-empty" id="repo-file-empty">Select a file from the tree to open its complete contents.</div>
+        <div id="repo-file-view" hidden>
+          <div class="repo-file-toolbar">
+            <div class="repo-file-path" id="repo-file-path"></div>
+            <div class="repo-file-meta" id="repo-file-meta"></div>
+            <div class="repo-file-actions">
+              <button type="button" class="repo-page-btn" id="repo-file-copy">Copy raw</button>
+            </div>
+          </div>
+          <div class="repo-file-code-wrap">
+            <pre class="repo-file-code" id="repo-file-code" aria-label="Raw file contents"></pre>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <div class="repo-page-readme" id="repo-page-readme">
+      <p style="color:var(--muted)">Loading README…</p>
+    </div>
+  </main>
+
+  <script src="runtime-repo-artifacts.js"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      const rawId = params.get('repo');
+      const id = rawId && /^[A-Za-z0-9._-]+$/.test(rawId) ? rawId : null;
+      const profile = params.get('profile') === 'coco' ? 'coco' : 'cyber';
+      const REPO_ROOT = profile === 'coco' ? 'repo-coco' : 'repos';
+      const PROFILE_SITE = profile === 'coco' ? 'coco.html' : 'site.html';
+      const PROFILE_NAME = profile === 'coco' ? 'Coco' : 'Cyber';
+
+      const els = {
+        icon: document.getElementById('repo-page-icon'),
+        name: document.getElementById('repo-page-name'),
+        sub: document.getElementById('repo-page-sub'),
+        tags: document.getElementById('repo-page-tags'),
+        lines: document.getElementById('repo-page-lines'),
+        rootPath: document.getElementById('repo-page-root-path'),
+        readme: document.getElementById('repo-page-readme'),
+        tree: document.getElementById('repo-tree'),
+        treeSearch: document.getElementById('repo-tree-search'),
+        fileEmpty: document.getElementById('repo-file-empty'),
+        fileView: document.getElementById('repo-file-view'),
+        filePath: document.getElementById('repo-file-path'),
+        fileMeta: document.getElementById('repo-file-meta'),
+        fileCode: document.getElementById('repo-file-code'),
+        fileCopy: document.getElementById('repo-file-copy'),
+        bundleBtn: document.getElementById('repo-page-bundle-btn'),
+        zipBtn: document.getElementById('repo-page-zip-btn'),
+      };
+
+      document.getElementById('repo-page-back').href = PROFILE_SITE;
+      document.title = `${PROFILE_NAME} | Repo`;
+
+      if (!id) {
+        els.name.textContent = 'No repo specified';
+        els.readme.innerHTML = '<p>Open this page from a repo card on the profile — e.g. <code>repo.html?repo=project-nova</code>.</p>';
+        return;
+      }
+
+      // ── Minimal markdown renderer (headers, bold/italic, code, lists, links) ──
+      function renderMarkdown(src) {
+        const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const lines = src.replace(/\r\n/g, '\n').split('\n');
+        let html = '', inCode = false, codeBuf = [], listOpen = null, para = [];
+
+        const inline = t => esc(t)
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+        const flushPara = () => { if (para.length) { html += `<p>${inline(para.join(' '))}</p>`; para = []; } };
+        const flushList = () => { if (listOpen) { html += `</${listOpen}>`; listOpen = null; } };
+
+        for (const raw of lines) {
+          const line = raw;
+          if (line.trim().startsWith('```')) {
+            if (!inCode) { flushPara(); flushList(); inCode = true; codeBuf = []; }
+            else { html += `<pre><code>${esc(codeBuf.join('\n'))}</code></pre>`; inCode = false; }
+            continue;
+          }
+          if (inCode) { codeBuf.push(line); continue; }
+
+          const t = line.trim();
+          let m;
+          if (!t) { flushPara(); flushList(); continue; }
+          if ((m = t.match(/^(#{1,6})\s+(.*)$/))) { flushPara(); flushList(); html += `<h${m[1].length}>${inline(m[2])}</h${m[1].length}>`; continue; }
+          if ((m = t.match(/^>\s?(.*)$/))) { flushPara(); flushList(); html += `<blockquote>${inline(m[1])}</blockquote>`; continue; }
+          if ((m = t.match(/^[-*]\s+(.*)$/))) { flushPara(); if (listOpen !== 'ul') { flushList(); html += '<ul>'; listOpen = 'ul'; } html += `<li>${inline(m[1])}</li>`; continue; }
+          if ((m = t.match(/^\d+\.\s+(.*)$/))) { flushPara(); if (listOpen !== 'ol') { flushList(); html += '<ol>'; listOpen = 'ol'; } html += `<li>${inline(m[1])}</li>`; continue; }
+          if (/^(-{3,}|\*{3,})$/.test(t)) { flushPara(); flushList(); html += '<hr>'; continue; }
+
+          flushList();
+          para.push(t);
+        }
+        flushPara(); flushList();
+        return html || '<p style="color:var(--muted)">Empty README.</p>';
+      }
+
+      async function safeJson(url) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) return null;
+          return await res.json();
+        } catch (_) { return null; }
+      }
+
+      async function safeText(url) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) return null;
+          return await res.text();
+        } catch (_) { return null; }
+      }
+
+
+      function formatBytes(bytes) {
+        if (!Number.isFinite(bytes)) return '—';
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(bytes < 10240 ? 1 : 0)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+      }
+
+      function normalizeRepoPath(value) {
+        const path = String(value || '').replace(/\\/g, '/').replace(/^\/+/, '');
+        if (!path || path.split('/').some(part => !part || part === '.' || part === '..')) return null;
+        return path;
+      }
+
+      function createTree(entries) {
+        const root = { name: id, path: '', type: 'dir', children: [] };
+        const dirs = new Map([['', root]]);
+        const sorted = [...entries].sort((a, b) => {
+          const ad = a.type === 'dir' ? 0 : 1;
+          const bd = b.type === 'dir' ? 0 : 1;
+          return ad - bd || a.path.localeCompare(b.path);
+        });
+
+        function ensureDir(path) {
+          if (dirs.has(path)) return dirs.get(path);
+          const parentPath = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+          const name = path.includes('/') ? path.slice(path.lastIndexOf('/') + 1) : path;
+          const parent = ensureDir(parentPath);
+          const node = { name, path, type: 'dir', children: [] };
+          parent.children.push(node);
+          dirs.set(path, node);
+          return node;
+        }
+
+        for (const entry of sorted) {
+          const path = normalizeRepoPath(entry.path);
+          if (!path) continue;
+          if (entry.type === 'dir') {
+            ensureDir(path);
+            continue;
+          }
+          const parentPath = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+          const parent = ensureDir(parentPath);
+          parent.children.push({ ...entry, name: path.slice(path.lastIndexOf('/') + 1), path });
+        }
+
+        function sortNode(node) {
+          node.children.sort((a, b) => {
+            const ad = a.type === 'dir' ? 0 : 1;
+            const bd = b.type === 'dir' ? 0 : 1;
+            return ad - bd || a.name.localeCompare(b.name);
+          });
+          node.children.forEach(child => child.type === 'dir' && sortNode(child));
+        }
+        sortNode(root);
+        return root;
+      }
+
+      function pathMatches(node, query) {
+        if (!query) return true;
+        const q = query.toLowerCase();
+        if (node.path.toLowerCase().includes(q)) return true;
+        return node.type === 'dir' && node.children.some(child => pathMatches(child, q));
+      }
+
+      function renderTree(root, query = '') {
+        els.tree.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+
+        function draw(node, depth) {
+          for (const child of node.children) {
+            if (!pathMatches(child, query)) continue;
+            const row = document.createElement('button');
+            row.type = 'button';
+            row.className = `tree-row ${child.type === 'dir' ? 'dir' : ''}`;
+            row.dataset.path = child.path;
+            row.setAttribute('aria-label', `${child.type === 'dir' ? 'Directory' : 'File'} ${child.path}`);
+
+            for (let i = 0; i < depth; i++) {
+              const indent = document.createElement('span');
+              indent.className = 'tree-indent';
+              row.appendChild(indent);
+            }
+
+            const icon = document.createElement('span');
+            icon.className = 'tree-icon';
+            icon.textContent = child.type === 'dir' ? '▸' : '·';
+            row.appendChild(icon);
+
+            const name = document.createElement('span');
+            name.className = 'tree-name';
+            name.textContent = child.name;
+            row.appendChild(name);
+
+            if (child.type === 'file' && Number.isFinite(child.size)) {
+              const size = document.createElement('span');
+              size.className = 'tree-size';
+              size.textContent = formatBytes(child.size);
+              row.appendChild(size);
+            }
+
+            row.addEventListener('click', () => {
+              if (child.type === 'dir') {
+                const isClosed = row.classList.toggle('tree-closed');
+                icon.textContent = isClosed ? '▸' : '▾';
+                const prefix = `${child.path}/`;
+                els.tree.querySelectorAll('.tree-row[data-path]').forEach(el => {
+                  if (el.dataset.path.startsWith(prefix)) el.hidden = isClosed;
+                });
+                return;
+              }
+              openFile(child);
+              els.tree.querySelectorAll('.tree-row.active').forEach(el => el.classList.remove('active'));
+              row.classList.add('active');
+            });
+
+            row.dataset.parent = child.path.includes('/') ? child.path.slice(0, child.path.lastIndexOf('/')) : '';
+            fragment.appendChild(row);
+            if (child.type === 'dir') draw(child, depth + 1);
+          }
+        }
+
+        draw(root, 0);
+        els.tree.appendChild(fragment);
+      }
+
+      async function generateRuntimeArtifact(kind, button) {
+        if (!id || !window.EliteHubRuntimeRepo) return;
+        const original = button?.textContent || '';
+        try {
+          if (button) { button.disabled = true; button.textContent = 'Reading repository…'; }
+          const tree = await safeJson(`repo-meta/${profile}/${encodeURIComponent(id)}.tree.json`);
+          const entries = tree && Array.isArray(tree.entries) ? tree.entries : [];
+          if (!entries.length) throw new Error('Repository tree is empty or unavailable.');
+          const artifact = await window.EliteHubRuntimeRepo.generate({
+            root: REPO_ROOT,
+            id,
+            entries,
+            name: els.name.textContent || id,
+            kind,
+            onProgress: (stage, done, total) => {
+              if (!button || !total) return;
+              button.textContent = stage === 'fetch' ? `Reading ${done}/${total}…` : 'Building…';
+            }
+          });
+          window.EliteHubRuntimeRepo.download(artifact);
+        } catch (err) {
+          console.error('[elite-hub/runtime-repo]', err);
+          window.alert(`Could not generate the ${kind === 'zip' ? 'ZIP' : 'Git bundle'}: ${err.message || err}`);
+        } finally {
+          if (button) { button.disabled = false; button.textContent = original; }
+        }
+      }
+
+      async function openFile(entry) {
+        const safePath = normalizeRepoPath(entry.path);
+        if (!safePath) return;
+        els.fileEmpty.hidden = true;
+        els.fileView.hidden = false;
+        els.filePath.textContent = safePath;
+        els.fileMeta.textContent = entry.binary ? `${formatBytes(entry.size)} • binary file` : `${formatBytes(entry.size)} • ${(entry.lines ?? 0).toLocaleString()} lines`;
+        els.fileCode.textContent = 'Loading…';
+
+        const url = `${REPO_ROOT}/${encodeURIComponent(id)}/${safePath.split('/').map(encodeURIComponent).join('/')}`;
+        if (entry.binary) {
+          els.fileCode.textContent = '[Binary file — raw text viewer is only available for text files.]';
+          els.fileCopy.disabled = true;
+          return;
+        }
+
+        els.fileCopy.disabled = false;
+        const src = await safeText(url);
+        if (src === null) {
+          els.fileCode.textContent = 'Unable to load this file.';
+          return;
+        }
+
+        // Raw viewer: intentionally no escaping, markup, language detection or syntax highlighting.
+        // textContent keeps the source completely literal and preserves every line as plain text.
+        els.fileCode.innerHTML = '';
+        const lines = src.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+        const fragment = document.createDocumentFragment();
+        for (const line of lines) {
+          const span = document.createElement('span');
+          span.className = 'repo-file-line';
+          span.textContent = line;
+          fragment.appendChild(span);
+        }
+        els.fileCode.appendChild(fragment);
+        els.fileCode._rawSource = src;
+        history.replaceState(null, '', `${location.pathname}?repo=${encodeURIComponent(id)}&profile=${profile}&file=${encodeURIComponent(safePath)}`);
+      }
+
+      (async () => {
+        const [manifest, meta, treeManifest] = await Promise.all([
+          safeJson(`${REPO_ROOT}/${encodeURIComponent(id)}/repo.json`),
+          safeJson(`repo-meta/${profile}/${encodeURIComponent(id)}.json`),
+          safeJson(`repo-meta/${profile}/${encodeURIComponent(id)}.tree.json`),
+        ]);
+
+        const name = (manifest && manifest.name) || id;
+        const icon = (manifest && manifest.icon) || '📦';
+        const image = manifest && manifest.image;
+        const tags = (manifest && Array.isArray(manifest.tags) && manifest.tags.length) ? manifest.tags : ['placeholder'];
+
+        document.title = `${PROFILE_NAME} | ${name}`;
+        els.name.textContent = name;
+        els.sub.textContent = `${REPO_ROOT}/${id}`;
+        els.tags.innerHTML = tags.map(t => `<span class="repo-page-tag">${t}</span>`).join('');
+        if (image) els.icon.innerHTML = `<img src="${image}" alt="${name}">`;
+        else els.icon.textContent = icon;
+
+        els.lines.textContent = meta && typeof meta.lines === 'number' ? meta.lines.toLocaleString() : '—';
+
+        els.rootPath.textContent = `${REPO_ROOT}/${id}`;
+
+        const entries = treeManifest && Array.isArray(treeManifest.entries) ? treeManifest.entries : [];
+        renderTree(createTree(entries));
+        els.treeSearch.addEventListener('input', () => renderTree(createTree(entries), els.treeSearch.value.trim()));
+
+        const initialFile = normalizeRepoPath(params.get('file'));
+        if (initialFile) {
+          const match = entries.find(e => e.type === 'file' && e.path === initialFile);
+          if (match) {
+            await openFile(match);
+            const active = els.tree.querySelector(`[data-path="${CSS.escape(initialFile)}"]`);
+            active?.classList.add('active');
+          }
+        }
+
+        els.fileCopy.addEventListener('click', async () => {
+          const source = els.fileCode._rawSource;
+          if (typeof source !== 'string') return;
+          try {
+            await navigator.clipboard.writeText(source);
+            els.fileCopy.textContent = 'Copied!';
+            setTimeout(() => { els.fileCopy.textContent = 'Copy raw'; }, 1200);
+          } catch (_) {}
+        });
+
+        els.bundleBtn?.addEventListener('click', () => generateRuntimeArtifact('bundle', els.bundleBtn));
+        els.zipBtn?.addEventListener('click', () => generateRuntimeArtifact('zip', els.zipBtn));
+
+        const readmeSrc = await safeText(`${REPO_ROOT}/${encodeURIComponent(id)}/README.md`);
+        els.readme.innerHTML = readmeSrc
+          ? renderMarkdown(readmeSrc)
+          : `<p style="color:var(--muted)">No README yet — drop one at <code>${REPO_ROOT}/${id}/README.md</code>.</p>`;
+      })();
+    })();
+  </script>
+</body>
+</html>

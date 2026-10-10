@@ -1,0 +1,178 @@
+x: user defined variable
+
+sin(x): sine of x.
+
+f =
+  ()->1
+
+echo: default
+
+echo: default
+
+log: default
+
+new is aliased to:
+
+sin(x): sine of x.
+
+test1
+
+test2
+
+test3
+
+test4
+
+new is aliased to:
+
+test2
+
+does_not_exist: unknown identifier
+
+PARI/GP functions sorted by topic: type ?n for n in
+
+   0: User-defined functions (aliases, installed and user functions)
+   1: Programming in GP: control statements
+   2: Programming in GP: other specific functions
+   3: Parallel programming in GP
+   4: GRAPHIC functions
+   5: Extra OPERATORS
+   6: CONVERSIONS, extracting information
+   7: COMBINATORICS
+   8: basic NUMBER THEORY
+   9: (Z/NZ)^* and abelian CHARACTERS
+  10: POLYNOMIALS and power series
+  11: LINEAR ALGEBRA, vectors and sets
+  12: TRANSCENDENTAL functions
+  13: SUMS, products, integrals
+  14: QUADRATIC fields and binary quadratic forms
+  15: General NUMBER FIELDS
+  16: GALOIS theory and class field theory
+  17: RELATIVE number field extensions and Z_K-modules
+  18: Associative and central simple ALGEBRAS
+  19: ELLIPTIC curves
+  20: HYPERELLIPTIC curves
+  21: L-FUNCTIONS
+  22: HYPERGEOMETRIC MOTIVES
+  23: MODULAR FORMS
+  24: MODULAR SYMBOLS
+
+A double question question mark ??n prints a short introduction.
+
+You may also be interested in
+  25: The PARI community
+
+Member functions, followed by relevant objects
+
+a1-a6, b2-b8, c4-c6 : coeff. of the curve.         ell
+area : area                                        ell
+bid  : big ideal                     bid,                     bnr
+bnf  : big number field                                   bnf,bnr
+clgp : class group              quad,bid,                 bnf,bnr
+cyc  : cyclic decomposition     quad,bid,     clgp,ell,   bnf,bnr
+diff, codiff: different and codifferent                nf,bnf,bnr
+disc : discriminant                                ell,nf,bnf,bnr,rnf
+e, f : inertia/residue  degree           prid
+fu   : fundamental units                                  bnf
+gen  : generators                    bid,prid,clgp,ell,   bnf,bnr,    gal
+group: group                                       ell,               gal
+index: index                                           nf,bnf,bnr
+j    : j-invariant                                 ell
+mod  : modulus                       bid,                     bnr,    gal
+nf   : number field                                    nf,bnf,bnr,rnf
+no   : number of elements       quad,bid,     clgp,ell,   bnf,bnr
+normfu:                         quad
+omega, eta: [w1,w2] and [eta1, eta2]               ell
+orders: relative orders of generators                                 gal
+p    : rational prime                    prid,     ell,nf,bnf,bnr,rnf,gal
+pol  : defining polynomial                             nf,bnf,bnr,    gal
+polabs: defining polynomial over Q                                rnf
+reg  : regulator                quad,                     bnf
+roots: roots                                       ell,nf,bnf,bnr,    gal
+sign,r1,r2 : signature                                 nf,bnf,bnr
+t2   : t2 matrix                                       nf,bnf,bnr
+tate : Tate's [u^2, u, q, [a,b], L, Ei]            ell
+tu   : torsion unit and its order                         bnf
+zk   : integral basis                                  nf,bnf,bnr,rnf
+zkst : structure of (Z_K/m)*         bid,                     bnr
+
+#       : enable/disable timer
+##      : print time for last result
+\\      : comment up to end of line
+\a {n}  : print result in raw format (readable by PARI)
+\B {n}  : print result in beautified format
+\c      : list all builtin functions
+\d      : print all defaults
+\e {n}  : enable/disable echo (set echo=n)
+\g {n}  : set debugging level
+\gf{n}  : set file debugging level
+\gm{n}  : set memory debugging level
+\h {m-n}: information on parser hashtables
+\l {f}  : enable/disable logfile (set logfile=f)
+\m {n}  : print result in prettymatrix format
+\o {n}  : set output method (0=raw, 1=prettymatrix, 2=prettyprint, 3=2-dim)
+\p {n}  : change real precision
+\pb{n}  : change real bit precision
+\ps{n}  : change series precision
+\q      : quit completely this GP session
+\qf     : quit reading current file
+\r {f}  : read in a file
+\s      : print stack information
+\t      : print the list of PARI types
+\u      : print the list of user-defined functions
+\um     : print the list of user-defined member functions
+\uv     : print the list of user-defined variables, excluding closures
+\v      : print current version of GP
+\w {nf} : write to a file
+\x {n}  : print complete inner structure of result
+\y {n}  : disable/enable automatic simplification (set simplify=n)
+\z {n}  : disable/enable doctest mode
+
+{f}=optional filename. {n}=optional integer
+
+
+break          breakpoint     dbg_down       dbg_err        dbg_up
+dbg_x          for            forcomposite   fordiv         fordivfactored
+foreach        forell         forfactored    forpart        forperm
+forprime       forprimestep   forsquarefree  forstep        forsubgroup
+forsubset      forvec         if             iferr          next
+return         setdebug       until          while          
+
+test6
+
+List of the PARI types:
+  t_INT    : long integers     [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_REAL   : long real numbers [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_INTMOD : integermods       [ code ] [ mod  ] [ integer ]
+  t_FRAC   : irred. rationals  [ code ] [ num. ] [ den. ]
+  t_FFELT  : finite field elt. [ code ] [ cod2 ] [ elt ] [ mod ] [ p ]
+  t_COMPLEX: complex numbers   [ code ] [ real ] [ imag ]
+  t_PADIC  : p-adic numbers    [ cod1 ] [ cod2 ] [ p ] [ p^r ] [ int ]
+  t_QUAD   : quadratic numbers [ cod1 ] [ mod  ] [ real ] [ imag ]
+  t_POLMOD : poly mod          [ code ] [ mod  ] [ polynomial ]
+  -------------------------------------------------------------
+  t_POL    : polynomials       [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_SER    : power series      [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_RFRAC  : irred. rat. func. [ code ] [ num. ] [ den. ]
+  t_QFB    : qfb               [ code ] [ a ] [ b ] [ c ] [ disc ]
+  t_VEC    : row vector        [ code ] [  x_1  ] ... [  x_k  ]
+  t_COL    : column vector     [ code ] [  x_1  ] ... [  x_k  ]
+  t_MAT    : matrix            [ code ] [ col_1 ] ... [ col_k ]
+  t_LIST   : list              [ cod1 ] [ cod2 ] [ vec ]
+  t_STR    : string            [ code ] [ man_1 ] ... [ man_k ]
+  t_VECSMALL: vec. small ints  [ code ] [ x_1 ] ... [ x_k ]
+  t_CLOSURE: functions         [ code ] [ arity ] [ proto ] [ operand ] ... 
+  t_ERROR  : error context     [ code ] [ errnum ] [ dat_1 ] ... [ dat_k ]
+  t_INFINITY: a*infinity       [ code ] [ a ]
+
+f =
+  ()->1
+
+g =
+  ()->0
+
+a&&b: boolean operator "and".
+
+x==y: return 1 if x and y are equal, 0 otherwise.
+
+Total time spent: 0

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cyber | Discord Authorization</title>
+  <style>
+    html,body{margin:0;min-height:100%;font-family:Inter,system-ui,sans-serif;background:#08090d;color:#f4f5f9}
+    body{display:grid;place-items:center;padding:24px}
+    .card{max-width:440px;width:100%;padding:28px;border:1px solid rgba(255,255,255,.08);border-radius:20px;background:#11141b;box-shadow:0 25px 70px rgba(0,0,0,.45)}
+    .muted{color:#9299aa;line-height:1.5}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1 id="title">Finishing Discord authorization…</h1>
+    <p id="message" class="muted">Please wait while we return you to the verification page.</p>
+  </main>
+  <script>
+    (() => {
+      const RESULT_KEY = 'cyber_discord_oauth_result';
+      const params = new URLSearchParams(location.search);
+      const payload = {
+        type: 'discord-oauth-result',
+        success: !params.get('error') && Boolean(params.get('code')),
+        code: params.get('code') || null,
+        state: params.get('state') || null,
+        error: params.get('error') || null,
+        timestamp: Date.now(),
+      };
+
+      // Always write the bridge value first. This is the path that gate.html
+      // actively re-checks after the popup closes, so it must never depend on
+      // postMessage succeeding — postMessage below is just a faster, optional
+      // path when window.opener happens to still be alive and same-origin.
+      try {
+        localStorage.setItem(RESULT_KEY, JSON.stringify(payload));
+      } catch (error) {
+        console.error('[cyber/oauth-callback/storage]', error);
+      }
+
+      // Best-effort: notify the original gate window directly if it's still
+      // reachable. Use '*' as the target origin — this popup's own
+      // location.origin is guaranteed to equal the opener's origin here
+      // (same site, same protocol/host/port), but some browsers report a
+      // transient null/opaque origin mid-redirect, which would otherwise
+      // cause postMessage to silently no-op. gate.html itself validates
+      // event.origin before trusting the payload, so this stays safe.
+      try {
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage(payload, '*');
+        }
+      } catch (error) {
+        console.error('[cyber/oauth-callback]', error);
+      }
+
+      document.getElementById('title').textContent = payload.success
+        ? 'Authorization complete'
+        : 'Authorization cancelled';
+      document.getElementById('message').textContent = payload.success
+        ? 'Authorization received. This window will close automatically…'
+        : 'Authorization cancelled. This window will close automatically…';
+
+      setTimeout(() => window.close(), 350);
+
+      // If this page cannot close itself (for example because the browser
+      // opened it as a normal tab), leave a safe link back to the gate instead
+      // of starting a second OAuth flow.
+      setTimeout(() => {
+        if (!window.closed) {
+          location.replace('./gate.html');
+        }
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>

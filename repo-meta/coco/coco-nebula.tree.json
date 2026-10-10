@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "repo": "coco-nebula",
+  "entries": [
+    {
+      "path": "README.md",
+      "type": "file",
+      "size": 176,
+      "lines": 5,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 105,
+      "lines": 6,
+      "binary": false
+    }
+  ]
+}

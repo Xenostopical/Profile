@@ -1,0 +1,39 @@
+# ============================================================================
+#  stuff.txt — list the repo folders (under repos/) you want shown as cards.
+#  Self-Hosted Git Replica pulls EVERYTHING else automatically from that
+#  folder — name, icon, tags, README, line count. Runtime download actions
+#  edit anything else to add, remove, or reorder a project.
+# ============================================================================
+#
+#  Each entry is one block, separated by blank lines. Only one field:
+#
+#    dir = the folder name under repos/ (e.g. "discomod")
+#
+#  What gets pulled from repos/<dir>/ automatically:
+#    - repo.json   -> { "name", "icon", "image", "tags" }
+#    - README.md   -> shown on the repository page
+#    - repo-meta/  -> static metadata for the directory tree + line count
+#
+#  Git bundles and ZIPs are generated on demand in browser memory. They are
+#  never written into this site or committed as static artifacts.
+#
+#  To add a project:
+#    1. mkdir repos/my-project, drop your files in
+#    2. (optional) add repos/my-project/repo.json for name/icon/tags
+#    3. add a [repo] block below with dir = my-project
+#    4. run ./build-repos.sh
+#
+#  Order here = order shown on the page.
+# ============================================================================
+
+[repo]
+dir = Discomod-main
+
+[repo]
+dir = raid-bot
+
+[repo]
+dir = nuke-bot
+
+[repo]
+dir = discord-rat

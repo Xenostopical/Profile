@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Hub — Boot</title>
+    <link rel="icon" href="assets/profile.webp" type="image/webp">
+
+    <!-- ── Discord / Open Graph embed ─────────────────────────────────── -->
+    <!-- Discord's link-preview crawler doesn't run JS, so this is the only
+         part of the page it ever actually reads. Image URLs must be
+         absolute (not relative) or the crawler will silently drop them. -->
+    <meta property="og:title" content="Enter Elite Hub">
+    <meta property="og:description" content="Much better than anything you can make with guns.lol.">
+    <meta property="og:image" content="https://gg.overgrown.site.je/assets/overgrown-elite-hub.png">
+    <meta property="og:image:alt" content="Overgrown Elite-Hub">
+    <meta property="og:image:width" content="1292">
+    <meta property="og:image:height" content="840">
+    <meta property="og:url" content="https://gg.overgrown.site.je/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Elite Hub">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Enter Elite Hub">
+    <meta name="twitter:description" content="Much better than anything you can make with guns.lol.">
+    <meta name="twitter:image" content="https://gg.overgrown.site.je/assets/overgrown-elite-hub.png">
+
+    <!-- Colors the accent strip on Discord's embed card -->
+    <meta name="theme-color" content="#00CED1">
+    <meta name="og:theme-color" content="#00CED1">
+
+    <style>
+        :root { --primary-color: #00CED1; }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; width: 100%; min-height: 100%; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; }
+        .custom-cursor { display:none; }
+        /* ── Start screen ───────────────────────────────────────────────── */
+        #start-screen {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: #000;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 30;
+            overflow: hidden;
+        }
+        #starfield {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            display: block;
+        }
+        #start-screen::before {
+            /* subtle vignette so the terminal reads clearly over the stars */
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
+            pointer-events: none;
+        }
+
+        /* ── Floating terminal window ───────────────────────────────────── */
+        #start-screen {
+            perspective: 1400px;
+        }
+        #terminal-window {
+            position: relative;
+            z-index: 1;
+            width: 640px;
+            max-width: 92vw;
+            height: 420px;
+            max-height: 78vh;
+            background: rgba(10,10,14,0.92);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 12px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.65), 0 0 40px rgba(0,206,209,0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            cursor: default;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+            will-change: transform;
+        }
+
+        .terminal-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 14px;
+            background: rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        .term-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .term-dot--red    { background: #ff5f57; }
+        .term-dot--yellow { background: #febc2e; }
+        .term-dot--green  { background: #28c840; }
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 0.5px;
+            margin-right: 44px; /* balance the 3 dots on the left */
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 18px 20px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: #7CFC9E;
+            white-space: pre-wrap;
+            cursor: default;
+        }
+        .terminal-body::-webkit-scrollbar { width: 6px; }
+        .terminal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+        #terminal-boot-lines .term-line { display: block; }
+        #terminal-boot-lines .term-ok   { color: #7CFC9E; }
+        #terminal-boot-lines .term-dim  { color: rgba(255,255,255,0.35); }
+        #terminal-boot-lines .term-warn { color: #febc2e; }
+
+        #terminal-ascii {
+            display: none;
+            color: #00CED1;
+            text-shadow: 0 0 8px rgba(0,206,209,0.5);
+            font-size: 11px;
+            line-height: 1.15;
+            margin: 4px 0 14px;
+            white-space: pre;
+        }
+        #terminal-quote {
+            display: none;
+            color: rgba(255,255,255,0.82);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        #terminal-continue {
+            display: none;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+        #terminal-continue:hover { color: var(--primary-color, #00CED1); }
+        .term-blink-cursor {
+            display: inline-block;
+            width: 8px;
+        }
+
+
+
+        @media (max-width: 700px) {
+            #terminal-window { width: 92vw; height: 78vh; }
+            #terminal-ascii { font-size: 8px; }
+        }
+        @media (hover: none) {
+            /* Touch devices have no cursor to tilt toward — keep it flat. */
+            #terminal-window { transform: none !important; }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="start-screen">
+        <canvas id="starfield" aria-hidden="true"></canvas>
+        <div id="terminal-window">
+            <div class="terminal-titlebar">
+                <span class="term-dot term-dot--red"></span>
+                <span class="term-dot term-dot--yellow"></span>
+                <span class="term-dot term-dot--green"></span>
+                <span class="terminal-title">elitehub@elitehub — boot</span>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div id="terminal-boot-lines"></div>
+                <pre id="terminal-ascii"></pre>
+                <div id="terminal-quote"></div>
+                <div id="terminal-continue">&gt; Click to continue<span class="term-blink-cursor" id="term-continue-cursor">|</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        const startScreen = document.getElementById('start-screen');
+        const termBody = document.getElementById('terminal-body');
+        const termBootLines = document.getElementById('terminal-boot-lines');
+        const termAscii = document.getElementById('terminal-ascii');
+        const termQuote = document.getElementById('terminal-quote');
+        const termContinue = document.getElementById('terminal-continue');
+        const termContinueCur = document.getElementById('term-continue-cursor');
+
+        // Independent loading page: verification happens in gate.html, then the
+        // real site lives in site.html. Returning visitors with the session flag
+        // skip the gate and go directly to site.html.
+        const GATE_PASSED_KEY = 'cyber_gate_passed';
+        const GATE_URL = 'gate.html';
+        const SITE_URL = 'profile-selector.html';
+
+        // Starfield (same visual treatment as the original boot screen).
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        let stars = [];
+        let w = 0, h = 0;
+        function resize() {
+            if (!canvas || !ctx) return;
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            const count = Math.floor((w * h) / 2600);
+            stars = Array.from({ length: count }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.3 + 0.2,
+                baseAlpha: Math.random() * 0.6 + 0.25,
+                twinkleSpeed: Math.random() * 0.015 + 0.004,
+                phase: Math.random() * Math.PI * 2,
+                drift: Math.random() * 0.05 + 0.01
+            }));
+        }
+        function tick(t) {
+            if (!canvas || !ctx) return;
+            ctx.clearRect(0, 0, w, h);
+            for (const s of stars) {
+                const alpha = s.baseAlpha + Math.sin(t * s.twinkleSpeed + s.phase) * 0.25;
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255,255,255,${Math.max(0, Math.min(1, alpha))})`;
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fill();
+                s.y += s.drift;
+                if (s.y > h) { s.y = 0; s.x = Math.random() * w; }
+            }
+            requestAnimationFrame(tick);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        requestAnimationFrame(tick);
+
+        // ── Cursor tilt ──────────────────────────────────────────────────
+        // The terminal window leans toward the cursor as it moves across the
+        // screen, like it's looking at you. Runs regardless of the OS
+        // reduce-motion setting (site owner's call) and is only skipped on
+        // touch devices, which have no cursor to react to.
+        const terminalWindow = document.getElementById('terminal-window');
+        const hasHover = window.matchMedia('(hover: hover)').matches;
+        if (terminalWindow && hasHover) {
+            const MAX_TILT_DEG = 10;   // how far it leans at the edges of the screen
+            const MAX_LIFT_PX = 6;     // subtle vertical parallax to sell the depth
+
+            window.addEventListener('mousemove', (event) => {
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                // Normalize cursor position to -1..1 relative to the viewport
+                // center, rather than the window's own box, so the tilt reads
+                // as "the whole screen is a window into the terminal" instead
+                // of jittering as the mouse crosses the terminal's edges.
+                const nx = (event.clientX / vw) * 2 - 1;
+                const ny = (event.clientY / vh) * 2 - 1;
+
+                const rotateY = nx * MAX_TILT_DEG;
+                const rotateX = -ny * MAX_TILT_DEG;
+                const translateY = ny * MAX_LIFT_PX;
+
+                terminalWindow.style.transform =
+                    `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(${translateY.toFixed(2)}px)`;
+            }, { passive: true });
+
+            window.addEventListener('mouseleave', () => {
+                terminalWindow.style.transform = 'rotateX(0deg) rotateY(0deg) translateY(0px)';
+            });
+        }
+
+// ── Terminal boot sequence ──────────────────────────────────────────────────
+const ELITE_HUB_ASCII =
+`  ██████╗██╗   ██╗██████╗ ███████╗██████╗ 
+ ██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗
+ ██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝
+ ██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗
+ ╚██████╗   ██║   ██████╔╝███████╗██║  ██║
+╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝`;
+
+const ELITE_HUB_QUOTE =
+`"When there's strife and when there's trouble,
+Elite Hub online — select your profile and enter."`;
+
+// A long, deliberately "human" boot log — real terminal output doesn't
+// arrive in perfectly even, uniform lines. Mixes feelings-check lines with
+// dry commentary, a stray retry, uneven pacing, and the occasional pause,
+// so it reads like someone's actual vibe booting up rather than a canned
+// loading bar. Kept intentionally free of hardware/software jargon —
+// everything here "loads" a mood, a vibe, or something equally silly.
+const bootSequence = [
+  { text: '$ ./boot.sh --profile elite-hub', cls: 'term-dim', speed: 14, delay: 220 },
+  { text: 'elite-hub core v4 — build 2026.10', cls: 'term-dim', speed: 8, delay: 140 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '[ .. ] checking vibes', cls: 'term-dim', speed: 9, delay: 170 },
+  { text: '[ OK ] vibes: immaculate', cls: 'term-ok', speed: 8, delay: 90 },
+  { text: '[ OK ] mood: curious', cls: 'term-ok', speed: 8, delay: 80 },
+  { text: '[ OK ] chaos levels: nominal', cls: 'term-ok', speed: 8, delay: 130 },
+  { text: '$ import excitement', cls: 'term-dim', speed: 12, delay: 150 },
+  { text: '[ OK ] excitement imported, slightly too much of it', cls: 'term-ok', speed: 7, delay: 100 },
+  { text: '$ summon confidence.exe', cls: 'term-dim', speed: 13, delay: 130 },
+  { text: '[FAIL] confidence.exe: not found', cls: 'term-warn', speed: 7, delay: 170 },
+  { text: '        (we\'re winging it. always have been.)', cls: 'term-dim', speed: 6, delay: 260 },
+  { text: '$ brew curiosity --strong', cls: 'term-dim', speed: 11, delay: 140 },
+  { text: 'curiosity brewing ... ready', cls: 'term-ok', speed: 5, delay: 90 },
+  { text: '[ OK ] fully caffeinated on vibes alone', cls: 'term-ok', speed: 7, delay: 150 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 80 },
+  { text: '$ ping good-intentions.net -c 1', cls: 'term-dim', speed: 11, delay: 140 },
+  { text: 'reply from good-intentions: feels=warm time=11ms', cls: 'term-ok', speed: 5, delay: 90 },
+  { text: '[ OK ] emotional uplink established', cls: 'term-ok', speed: 7, delay: 150 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 80 },
+  { text: '$ load feeling --type=wonder', cls: 'term-dim', speed: 11, delay: 130 },
+  { text: '[ OK ] wonder loaded (medium-large size)', cls: 'term-ok', speed: 6, delay: 100 },
+  { text: '$ load feeling --type=mischief', cls: 'term-dim', speed: 11, delay: 120 },
+  { text: '[ OK ] mischief loaded, please contain', cls: 'term-ok', speed: 6, delay: 100 },
+  { text: '$ load feeling --type=main-character-energy', cls: 'term-dim', speed: 11, delay: 120 },
+  { text: 'Retrying attach (1/3)...', cls: 'term-dim', speed: 5, delay: 210 },
+  { text: '[ OK ] main-character-energy loaded', cls: 'term-ok', speed: 6, delay: 130 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 100 },
+  { text: '$ load feeling --type=nostalgia', cls: 'term-dim', speed: 11, delay: 120 },
+  { text: '[ OK ] nostalgia loaded (hits different)', cls: 'term-ok', speed: 6, delay: 100 },
+  { text: '$ load feeling --type=determination', cls: 'term-dim', speed: 11, delay: 120 },
+  { text: '[ OK ] determination loaded, locked in', cls: 'term-ok', speed: 6, delay: 100 },
+  { text: '$ load feeling --type=chill', cls: 'term-dim', speed: 11, delay: 120 },
+  { text: '[ OK ] chill loaded, maybe too much chill', cls: 'term-ok', speed: 6, delay: 130 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '$ gather random fun facts', cls: 'term-dim', speed: 12, delay: 130 },
+  { text: 'fact: octopuses have three hearts .... noted', cls: 'term-ok', speed: 5, delay: 110 },
+  { text: 'fact: bananas are berries, strawberries aren\'t . noted', cls: 'term-ok', speed: 5, delay: 110 },
+  { text: 'fact: honey never spoils ................. noted', cls: 'term-ok', speed: 5, delay: 130 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '$ spin up personality daemon', cls: 'term-dim', speed: 11, delay: 130 },
+  { text: 'loading sense-of-humor ....... done', cls: 'term-ok', speed: 5, delay: 100 },
+  { text: 'loading stubbornness ......... done', cls: 'term-ok', speed: 5, delay: 100 },
+  { text: 'loading charm ................ done, mostly', cls: 'term-ok', speed: 5, delay: 130 },
+  { text: '$ roll dice --sides=20 --for=luck', cls: 'term-dim', speed: 11, delay: 130 },
+  { text: '> nat 20. felt that.', cls: 'term-ok', speed: 8, delay: 200 },
+  { text: '$ whoami', cls: 'term-dim', speed: 15, delay: 260 },
+  { text: '> elite-hub', cls: 'term-ok', speed: 18, delay: 190 },
+  { text: '$ finger elite-hub', cls: 'term-dim', speed: 12, delay: 140 },
+  { text: 'Login: elite-hub          Name: Elite Hub', cls: 'term-dim', speed: 5, delay: 100 },
+  { text: 'Head: full of nonsense    Heart: in the right place', cls: 'term-dim', speed: 5, delay: 110 },
+  { text: 'Status: awake, dangerously optimistic', cls: 'term-dim', speed: 5, delay: 200 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 100 },
+  { text: '$ check weather --inside=head', cls: 'term-dim', speed: 11, delay: 130 },
+  { text: 'forecast: mostly sunny with a chance of shenanigans', cls: 'term-ok', speed: 5, delay: 140 },
+  { text: '$ stretch', cls: 'term-dim', speed: 14, delay: 130 },
+  { text: '[ OK ] stretched. felt great.', cls: 'term-ok', speed: 6, delay: 100 },
+  { text: '$ crack knuckles', cls: 'term-dim', speed: 13, delay: 130 },
+  { text: '[ OK ] knuckles cracked, unreasonably satisfying', cls: 'term-ok', speed: 6, delay: 130 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '$ queue playlist --mood=hype', cls: 'term-dim', speed: 11, delay: 130 },
+  { text: 'now playing: track 1 of infinite', cls: 'term-ok', speed: 5, delay: 130 },
+  { text: '$ light candle --scent=nostalgia', cls: 'term-dim', speed: 11, delay: 130 },
+  { text: '[ OK ] candle lit, ambiance +10', cls: 'term-ok', speed: 6, delay: 130 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '$ pet nearby cat', cls: 'term-dim', speed: 12, delay: 130 },
+  { text: '[ OK ] cat approves, purring engaged', cls: 'term-ok', speed: 6, delay: 130 },
+  { text: '$ make wish --on=shooting-star', cls: 'term-dim', speed: 11, delay: 140 },
+  { text: '[ OK ] wish made, details classified', cls: 'term-ok', speed: 6, delay: 140 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '$ calibrate sense-of-humor --level=unhinged', cls: 'term-dim', speed: 10, delay: 130 },
+  { text: '[ OK ] calibrated. maybe too unhinged.', cls: 'term-ok', speed: 6, delay: 140 },
+  { text: '$ align stars', cls: 'term-dim', speed: 13, delay: 130 },
+  { text: 'aligning ................... close enough', cls: 'term-ok', speed: 5, delay: 140 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 90 },
+  { text: '$ take deep breath', cls: 'term-dim', speed: 12, delay: 150 },
+  { text: '[ OK ] inhale ......... exhale ......... good', cls: 'term-ok', speed: 5, delay: 160 },
+  { text: '$ hype self up', cls: 'term-dim', speed: 13, delay: 150 },
+  { text: 'you\'ve got this. probably.', cls: 'term-ok', speed: 6, delay: 180 },
+  { text: '', cls: 'term-dim', speed: 0, delay: 100 },
+  { text: 'all feelings nominal.', cls: 'term-ok', speed: 10, delay: 400 },
+];
+
+function typeLine(el, text, speed, onDone) {
+  if (!text) { if (onDone) onDone(); return; }
+  let i = 0;
+  (function step() {
+    el.textContent = text.slice(0, i);
+    if (i < text.length) {
+      i++;
+      // Slight per-character jitter so the typing doesn't feel mechanically even
+      const jitter = speed + (Math.random() * speed * 0.6 - speed * 0.3);
+      setTimeout(step, Math.max(4, jitter));
+    } else if (onDone) {
+      onDone();
+    }
+  })();
+}
+
+function runBootSequence(idx = 0) {
+  if (!termBootLines) return;
+  if (idx >= bootSequence.length) {
+    setTimeout(revealAscii, 550);
+    return;
+  }
+  const { text, cls, speed, delay } = bootSequence[idx];
+  const lineEl = document.createElement('div');
+  lineEl.className = 'term-line ' + cls;
+  termBootLines.appendChild(lineEl);
+  if (!text) {
+    // blank spacer line — no typing, just a beat of silence
+    if (termBody) termBody.scrollTop = termBody.scrollHeight;
+    setTimeout(() => runBootSequence(idx + 1), delay);
+    return;
+  }
+  typeLine(lineEl, text, speed, () => {
+    if (termBody) termBody.scrollTop = termBody.scrollHeight;
+    setTimeout(() => runBootSequence(idx + 1), delay);
+  });
+}
+
+function revealAscii() {
+  if (termAscii) {
+    termAscii.style.display = 'block';
+    termAscii.textContent   = ELITE_HUB_ASCII;
+  }
+  if (termBody) termBody.scrollTop = termBody.scrollHeight;
+  setTimeout(revealQuote, 750);
+}
+
+function revealQuote() {
+  if (termQuote) {
+    termQuote.style.display = 'block';
+    termQuote.textContent   = ELITE_HUB_QUOTE;
+  }
+  if (termBody) termBody.scrollTop = termBody.scrollHeight;
+  setTimeout(revealContinue, 1000);
+}
+
+let termContinueBlinkVisible = true;
+function revealContinue() {
+  if (termContinue) {
+    termContinue.style.display = 'block';
+    setInterval(() => {
+      termContinueBlinkVisible = !termContinueBlinkVisible;
+      if (termContinueCur) termContinueCur.style.visibility = termContinueBlinkVisible ? 'visible' : 'hidden';
+    }, 500);
+  }
+  if (termBody) termBody.scrollTop = termBody.scrollHeight;
+}
+
+setTimeout(() => runBootSequence(), 400);
+// ──────────────────────────────────────────────────────────────────────────
+
+
+        function hasPassed() {
+            try { return sessionStorage.getItem(GATE_PASSED_KEY) === '1'; }
+            catch { return false; }
+        }
+
+        function continueFromBoot() {
+            if (!termContinue || termContinue.style.display !== 'block') return;
+            window.location.href = hasPassed() ? SITE_URL : GATE_URL;
+        }
+
+        startScreen.addEventListener('click', continueFromBoot);
+        startScreen.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            continueFromBoot();
+        }, { passive: false });
+    })();
+    </script>
+</body>
+</html>

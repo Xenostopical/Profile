@@ -1,0 +1,72 @@
+Function: _header_graphic
+Class: header
+Section: graphic
+Doc:
+ \section{Plotting functions}
+
+   Although plotting is not even a side purpose of PARI, a number of plotting
+ functions are provided. These functions are platform independent, but a
+ number of graphical drivers are available for screen output: X11-windows,
+ Windows's Graphical Device Interface and the FLTK graphical libraries.
+ The binaries provided by the PARI group for Windows or macOS
+ open graphic windows natively. One may also write graphical objects to a
+ PostScript or SVG file and use external viewers to view or print them.
+
+ Any physical window opened from \kbd{gp} becomes independent
+ from the \kbd{gp} session. Technically, a \kbd{fork} is done and all memory
+ unrelated to the graphics engine is freed in the child process.
+ This means you can go on working in the current \kbd{gp} session, without
+ having to kill the window first. This window can be moved, closed, enlarged
+ or reduced using the standard window manager functions. You may even exit the
+ \kbd{gp} session while keeping the window around. No zooming procedure is
+ implemented, though.
+
+ The defaults \kbd{graphcolors} and \kbd{graphcolormap} can be used to
+ customize color settings. There are three types of graphic functions.
+
+ \subsec{High-level plotting functions} %GPHELPskip
+ These open a window displaying function graphs (\kbd{ploth}) or lists of
+ points (\kbd{plothraw}). There is little to do but explain what type of
+ plot you want.
+
+ \subsec{Low-level plotting functions} %GPHELPskip
+ These low-level functions share the shorter prefix \kbd{plot} and are called
+ \var{rectplot} functions. You have at your disposal 16 virtual
+ (rectangular) windows, numbered from $0$ to $15$, called
+ \var{rectwindows}. A window is initialized with \kbd{plotinit} before being
+ used, which specifies the height and width of the virtual window. Then
+ primitive graphic objets are drawn on independent windows using the likes of
+ \kbd{plotpoints}, \kbd{plotlines}, \kbd{plotbox}, \kbd{plotarc},
+ \kbd{plotstring}, etc., using a default color attached to that window,
+ which can be changed using \kbd{plotcolor}.
+ Only the part of the object which is inside the window will be drawn, with
+ the exception of character strings which are drawn entirely. Functions with
+ the prefix \kbd{plotrecth} put in the rectwindow a batch of objects
+ corresponding to the output of the related \kbd{ploth} function.
+
+ At all times, a virtual cursor  is attached to the window, initialized at
+ $[0,0]$ and its current value can be obtained using \kbd{plotcursor}.
+ Functions sharing the prefix \kbd{plotr} draw relatively to the current
+ position of the virtual cursor, the others use absolute coordinates.
+
+ Windows can be copied, clipped, physicaly OR-ed on a
+ single window. Finally, the actual physical drawing is done using
+ \kbd{plotdraw}. The rectwindows are preserved so that further drawings using
+ the same windows at different positions or different windows can be done
+ without extra work. To erase a window, use \kbd{plotkill}. To
+ partially erase a window: erase it completely, initialize it again, then
+ fill it with the graphic objects that you want to keep.
+
+ In addition to initializing the window, \kbd{plotscale} scales the window
+ to avoid conversions. As long as this function is not called, the scaling is
+ simply the number of pixels, the origin being at the upper left and the
+ $y$-coordinates going downwards.
+
+ \subsec{Functions for PostScript or SVG output} %GPHELPskip
+ in the same way that
+ \kbd{printtex} allows you to have a \TeX\ output
+ corresponding to printed results, the functions \kbd{plotexport},
+ \kbd{plothexport} and \kbd{plothrawexport} convert a plot to a character
+ string in either \tet{PostScript} or \tet{Scalable Vector Graphics} format.
+ This string can then be written to a file in the customary way, using
+ \kbd{write}. These export routines are available even if no Graphic Library is.

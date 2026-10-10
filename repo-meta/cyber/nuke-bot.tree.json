@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "repo": "nuke-bot",
+  "entries": [
+    {
+      "path": "icons",
+      "type": "dir"
+    },
+    {
+      "path": ".DS_Store",
+      "type": "file",
+      "size": 6148,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "avatar.png",
+      "type": "file",
+      "size": 31090,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "config.json",
+      "type": "file",
+      "size": 2406,
+      "lines": 79,
+      "binary": false
+    },
+    {
+      "path": "icons/1.png",
+      "type": "file",
+      "size": 31292,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "icons/2.png",
+      "type": "file",
+      "size": 40571,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "icons/3.jpg",
+      "type": "file",
+      "size": 65323,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "icons/4.png",
+      "type": "file",
+      "size": 119209,
+      "lines": null,
+      "binary": true
+    },
+    {
+      "path": "log_messages.txt",
+      "type": "file",
+      "size": 596,
+      "lines": 20,
+      "binary": false
+    },
+    {
+      "path": "nuke_stats.json",
+      "type": "file",
+      "size": 14353,
+      "lines": 448,
+      "binary": false
+    },
+    {
+      "path": "nuke.py",
+      "type": "file",
+      "size": 39536,
+      "lines": 1124,
+      "binary": false
+    },
+    {
+      "path": "premium.json",
+      "type": "file",
+      "size": 385,
+      "lines": 18,
+      "binary": false
+    },
+    {
+      "path": "readme.md",
+      "type": "file",
+      "size": 824,
+      "lines": 43,
+      "binary": false
+    },
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 132,
+      "lines": 10,
+      "binary": false
+    }
+  ]
+}

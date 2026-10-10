@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "repo": "Sab-script",
+  "entries": [
+    {
+      "path": "repo.json",
+      "type": "file",
+      "size": 134,
+      "lines": 10,
+      "binary": false
+    },
+    {
+      "path": "Script.lua",
+      "type": "file",
+      "size": 162,
+      "lines": 3,
+      "binary": false
+    }
+  ]
+}
